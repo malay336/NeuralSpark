@@ -27,10 +27,18 @@ def hello(request):
 
 @api.get("/questions", response=List[QuestionOutSchema])
 def list_questions(request):
+    """
+    Retrieves all community questions from the database.
+    Ordered descending by creation date (newest first).
+    """
     return Question.objects.all().order_by('-created_at')
 
 @api.post("/questions", response=QuestionOutSchema)
 def create_question(request, payload: QuestionInSchema):
+    """
+    Creates a new community Q&A question.
+    Parses string tags from the payload and creates them if they do not exist.
+    """
     user = get_current_user()
     question = Question.objects.create(
         author=user,
@@ -45,6 +53,10 @@ def create_question(request, payload: QuestionInSchema):
 
 @api.get("/questions/{q_id}", response=QuestionOutSchema)
 def get_question(request, q_id: int):
+    """
+    Fetches a single question by ID.
+    Increments the view count by 1 every time this endpoint is hit.
+    """
     q = get_object_or_404(Question, id=q_id)
     q.views += 1
     q.save()
@@ -57,6 +69,9 @@ def list_answers(request, q_id: int):
 
 @api.post("/questions/{q_id}/answers", response=AnswerOutSchema)
 def create_answer(request, q_id: int, payload: AnswerInSchema):
+    """
+    Allows a user to submit a new answer to a specific question.
+    """
     user = get_current_user()
     question = get_object_or_404(Question, id=q_id)
     answer = Answer.objects.create(
@@ -68,6 +83,7 @@ def create_answer(request, q_id: int, payload: AnswerInSchema):
 
 @api.post("/answers/{a_id}/upvote", response=AnswerOutSchema)
 def upvote_answer(request, a_id: int):
+    """Increments the vote count on an answer by 1."""
     answer = get_object_or_404(Answer, id=a_id)
     answer.votes += 1
     answer.save()
@@ -75,6 +91,7 @@ def upvote_answer(request, a_id: int):
 
 @api.post("/answers/{a_id}/downvote", response=AnswerOutSchema)
 def downvote_answer(request, a_id: int):
+    """Decrements the vote count on an answer by 1."""
     answer = get_object_or_404(Answer, id=a_id)
     answer.votes -= 1
     answer.save()
@@ -97,6 +114,10 @@ def list_categories(request):
 
 @api.get("/lectures", response=List[LectureSchema])
 def list_lectures(request):
+    """
+    Fetches all video lectures, ordering them by their assigned Sequence 
+    (Course Chapter) order.
+    """
     return Lecture.objects.all().order_by('order', '-created_at')
 
 @api.get("/pyqs", response=List[PYQSchema])
@@ -109,10 +130,15 @@ def list_products(request):
 
 @api.get("/services", response=List[ServiceSchema])
 def list_services(request):
+    """Lists available premium services (mentorship, consulting, etc.)."""
     return Service.objects.all().order_by('-created_at')
 
 @api.post("/inquiries", response=InquiryOutSchema)
 def create_inquiry(request, payload: InquiryInSchema):
+    """
+    Receives contact form submissions. Links them to a specific Service 
+    if a `service_id` is provided in the payload.
+    """
     service = None
     if payload.service_id:
         service = get_object_or_404(Service, id=payload.service_id)
@@ -131,6 +157,12 @@ import PyPDF2
 from typing import Optional
 
 def _process_uploaded_file(file: UploadedFile, label: str):
+    """
+    Helper function to process multimodal file uploads for the AI Grader.
+    - If it's a PDF, extracts the raw text via PyPDF2.
+    - If it's an Image, reads the bytes, encodes to base64, and formats
+      it as an image_url object for the Groq Vision model.
+    """
     if not file:
         return None
     
@@ -167,6 +199,12 @@ def ai_grader_endpoint(
     rubric_file: UploadedFile = File(None),
     student_answer_file: UploadedFile = File(None)
 ):
+    """
+    The main logic for the AI Assignment Grader.
+    Constructs a dynamic multimodal payload from text inputs and uploaded files (PDFs/Images).
+    Sends the compiled payload to Groq's `llama-3.2-11b-vision-preview` LLM model
+    for automated grading and feedback generation.
+    """
     client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
     
     system_prompt = """
@@ -207,7 +245,7 @@ def ai_grader_endpoint(
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_content}
             ],
-            model="llama-3.2-11b-vision-preview",
+            model="meta-llama/llama-4-scout-17b-16e-instruct",
             temperature=0.1,
         )
         return {"evaluation": completion.choices[0].message.content}

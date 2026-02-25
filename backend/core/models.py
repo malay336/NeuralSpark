@@ -3,6 +3,10 @@ from django.db import models
 from django.conf import settings
 
 class User(AbstractUser):
+    """
+    Custom User model extending Django's default AbstractUser.
+    Adds a biography field and a reputation score to gamify learning and interactions.
+    """
     bio = models.TextField(blank=True, null=True)
     reputation = models.IntegerField(default=0)
 
@@ -10,6 +14,9 @@ class User(AbstractUser):
         return self.username
 
 class Tag(models.Model):
+    """
+    Tags used to categorize forum Questions for easier searching and filtering.
+    """
     name = models.CharField(max_length=50, unique=True)
     description = models.TextField(blank=True, null=True)
 
@@ -17,6 +24,10 @@ class Tag(models.Model):
         return self.name
 
 class Category(models.Model):
+    """
+    High-level subjects (e.g., 'Data Structures', 'Operating Systems').
+    Used to organize Lectures, PYQs, and Questions into specific subjects.
+    """
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True, null=True)
 
@@ -24,6 +35,10 @@ class Category(models.Model):
         return self.name
 
 class Lecture(models.Model):
+    """
+    Represents a video lecture module.
+    Contains the video link (YouTube/Vimeo/Direct) and connects to a specific Category.
+    """
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     video_url = models.URLField(max_length=500)
@@ -35,6 +50,11 @@ class Lecture(models.Model):
         return self.title
 
 class PYQ(models.Model):
+    """
+    Previous Year Question (PYQ) model.
+    Stores the raw question text, an answer explanation, and an optional 
+    video explanation URL for deeper learning.
+    """
     year = models.IntegerField()
     subject = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='pyqs')
     question_text = models.TextField()
@@ -46,6 +66,10 @@ class PYQ(models.Model):
         return f"PYQ {self.year} - {self.subject.name}"
 
 class Product(models.Model):
+    """
+    Digital or physical products sold on the platform (e.g., 'GATE 2024 Mock Tests').
+    Includes details, pricing, and external purchase links.
+    """
     name = models.CharField(max_length=255)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -57,6 +81,10 @@ class Product(models.Model):
         return self.name
 
 class Service(models.Model):
+    """
+    Services offered by the platform (e.g., '1-on-1 Mentorship', 'Resume Review').
+    Users can inquire about these services through the frontend.
+    """
     name = models.CharField(max_length=255)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, help_text="Optional base price")
@@ -68,6 +96,11 @@ class Service(models.Model):
         return self.name
 
 class Question(models.Model):
+    """
+    Core model for the Community Q&A Forum.
+    Students can post text-based questions or embed video explanations.
+    Videos require manual moderator approval before public visibility.
+    """
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='questions')
     title = models.CharField(max_length=255)
     body = models.TextField()
@@ -84,6 +117,10 @@ class Question(models.Model):
         return self.title
 
 class Answer(models.Model):
+    """
+    Represents an answer to a specific community Question.
+    Can be upvoted/downvoted by users, and requires admin moderation before public display.
+    """
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='answers')
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
     body = models.TextField()
@@ -96,6 +133,9 @@ class Answer(models.Model):
         return f"Answer by {self.author.username} to '{self.question.title}'"
 
 class Comment(models.Model):
+    """
+    A simple comment that can be attached to either a Question or an Answer.
+    """
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='comments')
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -108,6 +148,10 @@ class Comment(models.Model):
         return f"Comment by {self.author.username}"
 
 class Inquiry(models.Model):
+    """
+    Stores contact form submissions from the Services page.
+    Generates leads for mentorship and other premium service bookings.
+    """
     name = models.CharField(max_length=255)
     email = models.EmailField()
     service = models.ForeignKey(Service, on_delete=models.SET_NULL, null=True, blank=True, related_name='inquiries')
