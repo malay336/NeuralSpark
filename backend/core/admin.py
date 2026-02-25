@@ -29,8 +29,8 @@ class QuestionAdmin(admin.ModelAdmin):
 
 @admin.register(Answer)
 class AnswerAdmin(admin.ModelAdmin):
-    list_display = ('question', 'author', 'is_accepted', 'is_approved', 'created_at')
-    list_filter = ('is_accepted', 'is_approved')
+    list_display = ('question', 'author', 'is_approved', 'created_at')
+    list_filter = ('is_approved',)
     search_fields = ('body', 'author__username')
 
 @admin.register(Comment)

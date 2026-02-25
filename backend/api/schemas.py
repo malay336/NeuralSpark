@@ -59,7 +59,7 @@ class AnswerOutSchema(ModelSchema):
     
     class Meta:
         model = Answer
-        fields = ['id', 'body', 'is_accepted', 'is_approved', 'created_at', 'votes']
+        fields = ['id', 'body', 'is_approved', 'created_at', 'votes']
 
 class AnswerInSchema(Schema):
     body: str

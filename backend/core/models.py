@@ -87,7 +87,6 @@ class Answer(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='answers')
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
     body = models.TextField()
-    is_accepted = models.BooleanField(default=False)
     is_approved = models.BooleanField(default=False, help_text="Checked by admin to approve answer")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -66,6 +66,20 @@ def create_answer(request, q_id: int, payload: AnswerInSchema):
     )
     return answer
 
+@api.post("/answers/{a_id}/upvote", response=AnswerOutSchema)
+def upvote_answer(request, a_id: int):
+    answer = get_object_or_404(Answer, id=a_id)
+    answer.votes += 1
+    answer.save()
+    return answer
+
+@api.post("/answers/{a_id}/downvote", response=AnswerOutSchema)
+def downvote_answer(request, a_id: int):
+    answer = get_object_or_404(Answer, id=a_id)
+    answer.votes -= 1
+    answer.save()
+    return answer
+
 @api.post("/answers/{a_id}/comments", response=CommentOutSchema)
 def create_answer_comment(request, a_id: int, payload: CommentInSchema):
     user = get_current_user()
