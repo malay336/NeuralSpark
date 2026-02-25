@@ -6,8 +6,11 @@ from .schemas import (
     QuestionOutSchema, QuestionInSchema,
     AnswerOutSchema, AnswerInSchema,
     CommentOutSchema, CommentInSchema,
-    CategorySchema, LectureSchema, PYQSchema, ProductSchema, ServiceSchema
+    CategorySchema, LectureSchema, PYQSchema, ProductSchema, ServiceSchema,
+    AIGraderInSchema, AIGraderOutSchema
 )
+import os
+from groq import Groq
 
 # In a real app we'd use proper auth. 
 # For testing the MVP, we will fetch the first user or create one.
@@ -92,3 +95,93 @@ def list_products(request):
 @api.get("/services", response=List[ServiceSchema])
 def list_services(request):
     return Service.objects.all().order_by('-created_at')
+
+from ninja import Form, File
+from ninja.files import UploadedFile
+import base64
+import PyPDF2
+from typing import Optional
+
+def _process_uploaded_file(file: UploadedFile, label: str):
+    if not file:
+        return None
+    
+    # If PDF, extract text and return a text message
+    if file.name.endswith('.pdf'):
+        try:
+            reader = PyPDF2.PdfReader(file.file)
+            text = ""
+            for page in reader.pages:
+                text += page.extract_text() + "\n"
+            return {"type": "text", "text": f"\n--- {label} (Extracted from PDF) ---\n" + text}
+        except Exception as e:
+            return {"type": "text", "text": f"\n--- {label} (Error reading PDF) ---\n"}
+            
+    # If image, encode to base64 and return image_url message
+    elif file.name.lower().endswith(('.png', '.jpg', '.jpeg', '.webp')):
+        try:
+            base64_image = base64.b64encode(file.file.read()).decode('utf-8')
+            return {
+                "type": "image_url",
+                "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}
+            }
+        except Exception:
+            pass
+    return None
+
+@api.post("/products/ai-grader", response=AIGraderOutSchema)
+def ai_grader_endpoint(
+    request, 
+    question: str = Form(""),
+    rubric: str = Form(""),
+    student_answer: str = Form(""),
+    question_file: UploadedFile = File(None),
+    rubric_file: UploadedFile = File(None),
+    student_answer_file: UploadedFile = File(None)
+):
+    client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+    
+    system_prompt = """
+    You are an expert Computer Science teaching assistant. Your job is to grade student submissions accurately and fairly.
+    You must strictly follow the provided rubric.
+
+    Output your evaluation EXACTLY in this format:
+    Score: [Points]/[Total Possible Points]
+    Feedback: [1-2 sentences explaining the score, highlighting any missing concepts or correct logic.]
+    """
+
+    user_content = []
+    
+    # Text prompts
+    if question.strip():
+        user_content.append({"type": "text", "text": f"Question:\n{question}\n"})
+    if rubric.strip():
+        user_content.append({"type": "text", "text": f"Rubric:\n{rubric}\n"})
+    if student_answer.strip():
+        user_content.append({"type": "text", "text": f"Student Answer:\n{student_answer}\n"})
+
+    # Process files
+    q_msg = _process_uploaded_file(question_file, "Question Attached File")
+    if q_msg: user_content.append(q_msg)
+        
+    r_msg = _process_uploaded_file(rubric_file, "Rubric Attached File")
+    if r_msg: user_content.append(r_msg)
+        
+    s_msg = _process_uploaded_file(student_answer_file, "Student Answer Attached File")
+    if s_msg: user_content.append(s_msg)
+
+    if not user_content:
+        return {"evaluation": "No question, rubric, or answer provided."}
+
+    try:
+        completion = client.chat.completions.create(
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_content}
+            ],
+            model="llama-3.2-11b-vision-preview",
+            temperature=0.1,
+        )
+        return {"evaluation": completion.choices[0].message.content}
+    except Exception as e:
+        return {"evaluation": f"Error during grading: {str(e)}"}

@@ -73,3 +73,11 @@ class CommentOutSchema(ModelSchema):
 
 class CommentInSchema(Schema):
     body: str
+
+class AIGraderInSchema(Schema):
+    question: str
+    rubric: str
+    student_answer: str
+
+class AIGraderOutSchema(Schema):
+    evaluation: str
