@@ -107,3 +107,13 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Comment by {self.author.username}"
+
+class Inquiry(models.Model):
+    name = models.CharField(max_length=255)
+    email = models.EmailField()
+    service = models.ForeignKey(Service, on_delete=models.SET_NULL, null=True, blank=True, related_name='inquiries')
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Inquiry from {self.name} - {self.email}"

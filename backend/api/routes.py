@@ -1,13 +1,14 @@
 from ninja import NinjaAPI
 from django.shortcuts import get_object_or_404
 from typing import List
-from core.models import Question, Answer, Comment, Tag, User, Category, Lecture, PYQ, Product, Service
+from core.models import Question, Answer, Comment, Tag, User, Category, Lecture, PYQ, Product, Service, Inquiry
 from .schemas import (
     QuestionOutSchema, QuestionInSchema,
     AnswerOutSchema, AnswerInSchema,
     CommentOutSchema, CommentInSchema,
     CategorySchema, LectureSchema, PYQSchema, ProductSchema, ServiceSchema,
-    AIGraderInSchema, AIGraderOutSchema
+    AIGraderInSchema, AIGraderOutSchema,
+    InquiryInSchema, InquiryOutSchema
 )
 import os
 from groq import Groq
@@ -95,6 +96,19 @@ def list_products(request):
 @api.get("/services", response=List[ServiceSchema])
 def list_services(request):
     return Service.objects.all().order_by('-created_at')
+
+@api.post("/inquiries", response=InquiryOutSchema)
+def create_inquiry(request, payload: InquiryInSchema):
+    service = None
+    if payload.service_id:
+        service = get_object_or_404(Service, id=payload.service_id)
+    inquiry = Inquiry.objects.create(
+        name=payload.name,
+        email=payload.email,
+        service=service,
+        message=payload.message
+    )
+    return inquiry
 
 from ninja import Form, File
 from ninja.files import UploadedFile

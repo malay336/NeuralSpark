@@ -1,7 +1,7 @@
 from ninja import ModelSchema, Schema
 from typing import List, Optional
 from datetime import datetime
-from core.models import User, Tag, Question, Answer, Comment, Category, Lecture, PYQ, Product, Service
+from core.models import User, Tag, Question, Answer, Comment, Category, Lecture, PYQ, Product, Service, Inquiry
 
 class CategorySchema(ModelSchema):
     class Meta:
@@ -81,3 +81,15 @@ class AIGraderInSchema(Schema):
 
 class AIGraderOutSchema(Schema):
     evaluation: str
+
+class InquiryInSchema(Schema):
+    name: str
+    email: str
+    service_id: Optional[int] = None
+    message: str
+
+class InquiryOutSchema(ModelSchema):
+    service: Optional[ServiceSchema] = None
+    class Meta:
+        model = Inquiry
+        fields = ['id', 'name', 'email', 'message', 'created_at']
