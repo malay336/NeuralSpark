@@ -1,7 +1,7 @@
 services:
   - type: web
     name: neuralspark-backend
-    env: python
+    runtime: python
     plan: free
     rootDir: backend
     buildCommand: "./build.sh"
