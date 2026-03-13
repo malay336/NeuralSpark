@@ -251,3 +251,77 @@ def ai_grader_endpoint(
         return {"evaluation": completion.choices[0].message.content}
     except Exception as e:
         return {"evaluation": f"Error during grading: {str(e)}"}
+
+import json
+from pathlib import Path
+
+# Load model lazily to avoid heavy memory usage unless the endpoint is hit
+# A global variable can hold the pipeline or model
+custom_grader_pipeline = None
+
+def get_custom_grader_pipeline():
+    global custom_grader_pipeline
+    if custom_grader_pipeline is None:
+        try:
+            from transformers import pipeline, AutoModelForSequenceClassification, AutoTokenizer
+            import torch
+            model_path = Path(__file__).resolve().parent.parent.parent / "ai_grader_model_customized"
+            tokenizer = AutoTokenizer.from_pretrained(model_path)
+            model = AutoModelForSequenceClassification.from_pretrained(model_path, num_labels=1)
+            custom_grader_pipeline = pipeline("text-classification", model=model, tokenizer=tokenizer, device="cpu")
+        except Exception as e:
+            print(f"Failed to load custom model: {e}")
+            return None
+    return custom_grader_pipeline
+
+@api.post("/products/ai-grader-customized", response=AIGraderOutSchema)
+def ai_grader_endpoint_customized(
+    request, 
+    question: str = Form(""),
+    rubric: str = Form(""),
+    student_answer: str = Form(""),
+    question_file: UploadedFile = File(None),
+    rubric_file: UploadedFile = File(None),
+    student_answer_file: UploadedFile = File(None)
+):
+    """
+    The main logic for the customized AI Assignment Grader using a locally fine-tuned model.
+    """
+    user_content_text = ""
+    
+    # Text prompts
+    if question.strip():
+        user_content_text += f"Question:\n{question}\n"
+    if rubric.strip():
+        user_content_text += f"Rubric:\n{rubric}\n"
+    if student_answer.strip():
+        user_content_text += f"Student Answer:\n{student_answer}\n"
+
+    # Process files
+    q_msg = _process_uploaded_file(question_file, "Question Attached File")
+    if q_msg and q_msg.get("type") == "text": 
+        user_content_text += q_msg["text"] + "\n"
+        
+    r_msg = _process_uploaded_file(rubric_file, "Rubric Attached File")
+    if r_msg and r_msg.get("type") == "text": 
+        user_content_text += r_msg["text"] + "\n"
+        
+    s_msg = _process_uploaded_file(student_answer_file, "Student Answer Attached File")
+    if s_msg and s_msg.get("type") == "text": 
+        user_content_text += s_msg["text"] + "\n"
+
+    if not user_content_text.strip():
+        return {"evaluation": "No valid text provided for grading."}
+
+    grader = get_custom_grader_pipeline()
+    if grader is None:
+        return {"evaluation": "Custom model unavailable or failed to load. Please check server logs."}
+    
+    try:
+        # Pass truncation=True and max_length=512 to ensure the model limits the max token size
+        result = grader(user_content_text, truncation=True, max_length=512)
+        score = result[0].get('score', result[0].get('label', 0.0))
+        return {"evaluation": f"Score: {score:.2f}\nFeedback: (Graded by custom local model)"}
+    except Exception as e:
+        return {"evaluation": f"Error during grading with custom model: {str(e)}"}
+

@@ -1,0 +1,17 @@
+# AI Models
+ai_grader_model_customized/
+
+# Python
+__pycache__/
+*.pyc
+venv/
+backend/venv/
+backend/.env
+
+# Node
+node_modules/
+frontend/node_modules/
+.env
+
+# MacOS
+.DS_Store
