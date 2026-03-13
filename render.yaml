@@ -2,6 +2,7 @@ services:
   - type: web
     name: neuralspark-backend
     env: python
+    plan: free
     rootDir: backend
     buildCommand: "./build.sh"
     startCommand: "gunicorn e_learning_project.wsgi:application"
