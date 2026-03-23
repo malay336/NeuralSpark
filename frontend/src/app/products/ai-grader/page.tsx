@@ -70,7 +70,7 @@ export default function AIGraderPage() {
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Question</label>
                         <textarea
-                            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none h-24 mb-2"
+                            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none h-24 mb-2 text-black"
                             placeholder="e.g. Explain how the Binary Search algorithm works..."
                             value={question}
                             onChange={(e) => setQuestion(e.target.value)}
@@ -86,7 +86,7 @@ export default function AIGraderPage() {
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Rubric</label>
                         <textarea
-                            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none h-24 mb-2"
+                            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none h-24 mb-2 text-black"
                             placeholder="e.g. 5 points for logic, 5 for time complexity..."
                             value={rubric}
                             onChange={(e) => setRubric(e.target.value)}
@@ -102,7 +102,7 @@ export default function AIGraderPage() {
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Student Answer</label>
                         <textarea
-                            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none h-32 mb-2"
+                            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none h-32 mb-2 text-black"
                             placeholder="Paste the student's submission here..."
                             value={studentAnswer}
                             onChange={(e) => setStudentAnswer(e.target.value)}
