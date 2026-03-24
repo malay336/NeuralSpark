@@ -61,7 +61,7 @@ export default function AskQuestion() {
                         required
                         value={title}
                         onChange={e => setTitle(e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none text-black"
                         placeholder="e.g. Is there an R function for finding the index of an element in a vector?"
                     />
                 </div>
@@ -74,7 +74,7 @@ export default function AskQuestion() {
                         rows={10}
                         value={body}
                         onChange={e => setBody(e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none resize-y"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none resize-y text-black"
                         placeholder="Include all the information someone would need to answer your question"
                     />
                 </div>
@@ -86,7 +86,7 @@ export default function AskQuestion() {
                         type="url"
                         value={videoUrl}
                         onChange={e => setVideoUrl(e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none text-black"
                         placeholder="e.g. https://www.youtube.com/watch?v=dQw4w9WgXcQ"
                     />
                 </div>
@@ -98,7 +98,7 @@ export default function AskQuestion() {
                         type="text"
                         value={tagsInput}
                         onChange={e => setTagsInput(e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none text-black"
                         placeholder="e.g. django, python, machine-learning"
                     />
                 </div>

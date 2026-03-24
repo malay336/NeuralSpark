@@ -173,7 +173,7 @@ export default function ServicesPage() {
                                     <input
                                         type="text"
                                         required
-                                        className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder:text-gray-300"
+                                        className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder:text-gray-300 text-black"
                                         placeholder="Jane Doe"
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
@@ -184,7 +184,7 @@ export default function ServicesPage() {
                                     <input
                                         type="email"
                                         required
-                                        className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder:text-gray-300"
+                                        className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder:text-gray-300 text-black"
                                         placeholder="jane@example.com"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
@@ -195,7 +195,7 @@ export default function ServicesPage() {
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Service (Optional)</label>
                                 <select
-                                    className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all bg-white"
+                                    className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all bg-white text-black"
                                     value={serviceId}
                                     onChange={(e) => setServiceId(e.target.value)}
                                 >
@@ -210,7 +210,7 @@ export default function ServicesPage() {
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Message <span className="text-red-500">*</span></label>
                                 <textarea
                                     required
-                                    className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder:text-gray-300 h-32 resize-none"
+                                    className="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder:text-gray-300 h-32 resize-none text-black"
                                     placeholder="How can we help you achieve your goals?"
                                     value={message}
                                     onChange={(e) => setMessage(e.target.value)}

@@ -248,7 +248,7 @@ export default function QuestionDetail({ params }: { params: Promise<{ id: strin
                     <textarea
                         value={answerBody}
                         onChange={(e) => setAnswerBody(e.target.value)}
-                        className="w-full h-48 p-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none resize-y"
+                        className="w-full h-48 p-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none resize-y text-black"
                         placeholder="Write your detailed answer here..."
                         required
                     />
