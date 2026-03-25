@@ -45,7 +45,7 @@ export default function Navbar() {
                     <Link href="/learning" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors">
                         Learning
                     </Link>
-                    <Link href="/practice-questions" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors">
+                    <Link href="/learning/pyqs" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors">
                         Practice Questions
                     </Link>
                     <Link href="/products" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors">
