@@ -117,4 +117,5 @@ flowchart TD
         Models --> Lecture["Lecture Model\nvideo_url"]
         Models --> Inquiry["Inquiry Model\nbooking data"]
     end
+    
 ```
