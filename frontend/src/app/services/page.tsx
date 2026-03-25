@@ -36,7 +36,7 @@ export default function ServicesPage() {
     useEffect(() => {
         const fetchServices = async () => {
             try {
-                const { data } = await api.get("/services");
+                const { data } = await api.get("services");
                 setServices(data);
             } catch (err) {
                 console.error("Failed to fetch services", err);
@@ -64,7 +64,7 @@ export default function ServicesPage() {
         setSuccess(false);
 
         try {
-            await api.post("/inquiries", {
+            await api.post("inquiries", {
                 name,
                 email,
                 service_id: serviceId ? parseInt(serviceId) : null,
