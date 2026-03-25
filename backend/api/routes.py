@@ -21,11 +21,11 @@ def get_current_user():
 
 api = NinjaAPI()
 
-@api.get("/hello")
+@api.get("/hello/")
 def hello(request):
     return {"message": "Hello from NeuralSpark"}
 
-@api.get("/questions", response=List[QuestionOutSchema])
+@api.get("/questions/", response=List[QuestionOutSchema])
 def list_questions(request):
     """
     Retrieves all community questions from the database.
@@ -33,7 +33,7 @@ def list_questions(request):
     """
     return Question.objects.all().order_by('-created_at')
 
-@api.post("/questions", response=QuestionOutSchema)
+@api.post("/questions/", response=QuestionOutSchema)
 def create_question(request, payload: QuestionInSchema):
     """
     Creates a new community Q&A question.
@@ -51,7 +51,7 @@ def create_question(request, payload: QuestionInSchema):
         question.tags.add(tag)
     return question
 
-@api.get("/questions/{q_id}", response=QuestionOutSchema)
+@api.get("/questions/{q_id}/", response=QuestionOutSchema)
 def get_question(request, q_id: int):
     """
     Fetches a single question by ID.
@@ -62,12 +62,12 @@ def get_question(request, q_id: int):
     q.save()
     return q
 
-@api.get("/questions/{q_id}/answers", response=List[AnswerOutSchema])
+@api.get("/questions/{q_id}/answers/", response=List[AnswerOutSchema])
 def list_answers(request, q_id: int):
     # Only return approved answers
     return Answer.objects.filter(question_id=q_id, is_approved=True).order_by('-votes', 'created_at')
 
-@api.post("/questions/{q_id}/answers", response=AnswerOutSchema)
+@api.post("/questions/{q_id}/answers/", response=AnswerOutSchema)
 def create_answer(request, q_id: int, payload: AnswerInSchema):
     """
     Allows a user to submit a new answer to a specific question.
@@ -81,7 +81,7 @@ def create_answer(request, q_id: int, payload: AnswerInSchema):
     )
     return answer
 
-@api.post("/answers/{a_id}/upvote", response=AnswerOutSchema)
+@api.post("/answers/{a_id}/upvote/", response=AnswerOutSchema)
 def upvote_answer(request, a_id: int):
     """Increments the vote count on an answer by 1."""
     answer = get_object_or_404(Answer, id=a_id)
@@ -89,7 +89,7 @@ def upvote_answer(request, a_id: int):
     answer.save()
     return answer
 
-@api.post("/answers/{a_id}/downvote", response=AnswerOutSchema)
+@api.post("/answers/{a_id}/downvote/", response=AnswerOutSchema)
 def downvote_answer(request, a_id: int):
     """Decrements the vote count on an answer by 1."""
     answer = get_object_or_404(Answer, id=a_id)
@@ -97,7 +97,7 @@ def downvote_answer(request, a_id: int):
     answer.save()
     return answer
 
-@api.post("/answers/{a_id}/comments", response=CommentOutSchema)
+@api.post("/answers/{a_id}/comments/", response=CommentOutSchema)
 def create_answer_comment(request, a_id: int, payload: CommentInSchema):
     user = get_current_user()
     answer = get_object_or_404(Answer, id=a_id)
@@ -108,11 +108,11 @@ def create_answer_comment(request, a_id: int, payload: CommentInSchema):
     )
     return comment
 
-@api.get("/categories", response=List[CategorySchema])
+@api.get("/categories/", response=List[CategorySchema])
 def list_categories(request):
     return Category.objects.all()
 
-@api.get("/lectures", response=List[LectureSchema])
+@api.get("/lectures/", response=List[LectureSchema])
 def list_lectures(request):
     """
     Fetches all video lectures, ordering them by their assigned Sequence 
@@ -120,20 +120,20 @@ def list_lectures(request):
     """
     return Lecture.objects.all().order_by('order', '-created_at')
 
-@api.get("/pyqs", response=List[PYQSchema])
+@api.get("/pyqs/", response=List[PYQSchema])
 def list_pyqs(request):
     return PYQ.objects.all().order_by('-year')
 
-@api.get("/products", response=List[ProductSchema])
+@api.get("/products/", response=List[ProductSchema])
 def list_products(request):
     return Product.objects.all().order_by('-created_at')
 
-@api.get("/services", response=List[ServiceSchema])
+@api.get("/services/", response=List[ServiceSchema])
 def list_services(request):
     """Lists available premium services (mentorship, consulting, etc.)."""
     return Service.objects.all().order_by('-created_at')
 
-@api.post("/inquiries", response=InquiryOutSchema)
+@api.post("/inquiries/", response=InquiryOutSchema)
 def create_inquiry(request, payload: InquiryInSchema):
     """
     Receives contact form submissions. Links them to a specific Service 
@@ -189,7 +189,7 @@ def _process_uploaded_file(file: UploadedFile, label: str):
             pass
     return None
 
-@api.post("/products/ai-grader", response=AIGraderOutSchema)
+@api.post("/products/ai-grader/", response=AIGraderOutSchema)
 def ai_grader_endpoint(
     request, 
     question: str = Form(""),
@@ -274,7 +274,7 @@ def get_custom_grader_pipeline():
             return None
     return custom_grader_pipeline
 
-@api.post("/products/ai-grader-customized", response=AIGraderOutSchema)
+@api.post("/products/ai-grader-customized/", response=AIGraderOutSchema)
 def ai_grader_endpoint_customized(
     request, 
     question: str = Form(""),
