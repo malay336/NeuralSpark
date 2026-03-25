@@ -20,7 +20,7 @@ export default function AskQuestion() {
         const tags = tagsInput.split(",").map(t => t.trim()).filter(t => t.length > 0);
 
         try {
-            const { data } = await api.post("questions", {
+            const { data } = await api.post("questions/", {
                 title,
                 body,
                 tags,

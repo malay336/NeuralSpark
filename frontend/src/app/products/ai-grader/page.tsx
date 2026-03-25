@@ -41,7 +41,7 @@ export default function AIGraderPage() {
             if (rubricFile) formData.append("rubric_file", rubricFile);
             if (studentAnswerFile) formData.append("student_answer_file", studentAnswerFile);
 
-            const { data } = await api.post("products/ai-grader", formData, {
+            const { data } = await api.post("products/ai-grader/", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },

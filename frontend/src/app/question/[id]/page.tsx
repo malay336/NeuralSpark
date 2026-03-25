@@ -55,8 +55,8 @@ export default function QuestionDetail({ params }: { params: Promise<{ id: strin
     const fetchData = async () => {
         try {
             const [qRes, aRes] = await Promise.all([
-                api.get(`questions/${q_id}`),
-                api.get(`questions/${q_id}/answers`),
+                api.get(`questions/${q_id}/`),
+                api.get(`questions/${q_id}/answers/`),
             ]);
             setQuestion(qRes.data);
             setAnswers(aRes.data);
@@ -78,7 +78,7 @@ export default function QuestionDetail({ params }: { params: Promise<{ id: strin
 
         setSubmitting(true);
         try {
-            const { data } = await api.post(`questions/${q_id}/answers`, { body: answerBody });
+            const { data } = await api.post(`questions/${q_id}/answers/`, { body: answerBody });
             setAnswers([data, ...answers]);
             setAnswerBody("");
         } catch (error) {
@@ -95,7 +95,7 @@ export default function QuestionDetail({ params }: { params: Promise<{ id: strin
      */
     const handleUpvote = async (a_id: number) => {
         try {
-            const { data } = await api.post(`answers/${a_id}/upvote`);
+            const { data } = await api.post(`answers/${a_id}/upvote/`);
             setAnswers(answers.map(ans => ans.id === a_id ? data : ans));
         } catch (error) {
             console.error("Failed to upvote:", error);
@@ -104,7 +104,7 @@ export default function QuestionDetail({ params }: { params: Promise<{ id: strin
 
     const handleDownvote = async (a_id: number) => {
         try {
-            const { data } = await api.post(`answers/${a_id}/downvote`);
+            const { data } = await api.post(`answers/${a_id}/downvote/`);
             setAnswers(answers.map(ans => ans.id === a_id ? data : ans));
         } catch (error) {
             console.error("Failed to downvote:", error);
