@@ -137,43 +137,44 @@ export default function PYQFeed() {
                             </motion.div>
                         ) : (
                             filteredPyqs.map((p, index) => (
-                                <motion.div
-                                    key={p.id}
-                                    layout
-                                    initial={{ opacity: 0, scale: 0.9 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    exit={{ opacity: 0, scale: 0.9 }}
-                                    transition={{ duration: 0.2, delay: index * 0.05 }}
-                                    className="group bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-6 hover:shadow-xl hover:shadow-blue-100 dark:hover:shadow-blue-900/10 transition-all cursor-pointer flex flex-col h-full active:scale-[0.98]"
-                                >
-                                    <div className="flex items-center justify-between mb-4">
-                                        <div className="flex items-center gap-2 px-2.5 py-1 bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 rounded-lg text-xs font-bold">
-                                            <Tag className="w-3 h-3" />
-                                            {p.subject.name}
+                                <Link href={`/learning/pyqs/${p.id}`} key={p.id} className="block h-full group">
+                                    <motion.div
+                                        layout
+                                        initial={{ opacity: 0, scale: 0.9 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.9 }}
+                                        transition={{ duration: 0.2, delay: index * 0.05 }}
+                                        className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-6 hover:shadow-xl hover:shadow-blue-100 dark:hover:shadow-blue-900/10 transition-all cursor-pointer flex flex-col h-full active:scale-[0.98]"
+                                    >
+                                        <div className="flex items-center justify-between mb-4">
+                                            <div className="flex items-center gap-2 px-2.5 py-1 bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 rounded-lg text-xs font-bold">
+                                                <Tag className="w-3 h-3" />
+                                                {p.subject.name}
+                                            </div>
+                                            <div className="flex items-center gap-1.5 text-xs text-gray-400 font-medium">
+                                                <Calendar className="w-3.5 h-3.5" />
+                                                {p.year}
+                                            </div>
                                         </div>
-                                        <div className="flex items-center gap-1.5 text-xs text-gray-400 font-medium">
-                                            <Calendar className="w-3.5 h-3.5" />
-                                            {p.year}
-                                        </div>
-                                    </div>
-                                    
-                                    <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3 line-clamp-2 leading-snug group-hover:text-blue-600 transition-colors">
-                                        {p.subject.name} - Sample Question
-                                    </h3>
-                                    
-                                    <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-4 leading-relaxed mb-6 flex-1">
-                                        {p.question_text}
-                                    </p>
+                                        
+                                        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3 line-clamp-2 leading-snug group-hover:text-blue-600 transition-colors">
+                                            {p.subject.name} - Sample Question
+                                        </h3>
+                                        
+                                        <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-4 leading-relaxed mb-6 flex-1">
+                                            {p.question_text}
+                                        </p>
 
-                                    <div className="pt-4 border-t border-gray-50 dark:border-gray-800 flex items-center justify-between">
-                                        <span className="text-xs text-gray-400">
-                                            Added {formatDistanceToNow(new Date(p.created_at), { addSuffix: true })}
-                                        </span>
-                                        <button className="flex items-center gap-1.5 text-blue-600 text-sm font-bold group-hover:gap-2.5 transition-all">
-                                            View Details <ArrowRight className="w-4 h-4" />
-                                        </button>
-                                    </div>
-                                </motion.div>
+                                        <div className="pt-4 border-t border-gray-50 dark:border-gray-800 flex items-center justify-between">
+                                            <span className="text-xs text-gray-400">
+                                                Added {formatDistanceToNow(new Date(p.created_at), { addSuffix: true })}
+                                            </span>
+                                            <div className="flex items-center gap-1.5 text-blue-600 text-sm font-bold group-hover:gap-2.5 transition-all outline-none">
+                                                View Details <ArrowRight className="w-4 h-4" />
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                </Link>
                             ))
                         )}
                     </AnimatePresence>

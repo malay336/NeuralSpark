@@ -111,11 +111,11 @@ export default function QuestionDetail({ params }: { params: Promise<{ id: strin
         }
     };
 
-    if (loading) return <div className="p-8">Loading...</div>;
-    if (!question) return <div className="p-8">Question not found.</div>;
+    if (loading) return <div className="flex justify-center items-center h-64"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>;
+    if (!question) return <div className="max-w-4xl mx-auto px-4 py-12 text-center text-gray-500">Question not found.</div>;
 
     return (
-        <div className="max-w-4xl space-y-8">
+        <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
             {/* Question Header */}
             <div>
                 <h1 className="text-3xl font-normal text-gray-900 mb-4">{question.title}</h1>

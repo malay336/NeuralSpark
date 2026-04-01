@@ -124,6 +124,13 @@ def list_lectures(request):
 def list_pyqs(request):
     return PYQ.objects.all().order_by('-year')
 
+@api.get("/pyqs/{pyq_id}/", response=PYQSchema)
+def get_pyq(request, pyq_id: int):
+    """
+    Fetches a single Previous Year Question by its ID.
+    """
+    return get_object_or_404(PYQ, id=pyq_id)
+
 @api.get("/products/", response=List[ProductSchema])
 def list_products(request):
     return Product.objects.all().order_by('-created_at')
