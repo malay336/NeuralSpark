@@ -1,7 +1,7 @@
 "use client";
 
 import Link from 'next/link';
-import { Search, UserCircle, Menu, Sun, Moon } from 'lucide-react';
+import { Search, UserCircle, Menu, Sun, Moon, Wallet } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTheme } from '@/context/ThemeContext';
 
@@ -48,6 +48,9 @@ export default function Navbar() {
                     <Link href="/learning/pyqs" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors">
                         Practice Questions
                     </Link>
+                    <Link href="/learning/ai-assistant" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors flex items-center gap-1">
+                        AI Assistant
+                    </Link>
                     <Link href="/products" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors">
                         Products
                     </Link>
@@ -62,6 +65,7 @@ export default function Navbar() {
                     </Link>
                 </div>
 
+
                 {/* Right Actions */}
                 <div className="flex items-center gap-4">
                     <button
@@ -74,6 +78,10 @@ export default function Navbar() {
                     <button className="p-2 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-white rounded-full transition-colors">
                         <Search className="h-5 w-5" />
                     </button>
+                    <Link href="/wallet" className="p-2 text-gray-500 dark:text-gray-400 hover:text-green-500 dark:hover:text-green-400 rounded-full transition-colors flex items-center gap-1.5 bg-green-50 dark:bg-green-900/10 px-3 border border-green-100 dark:border-green-900/30">
+                        <Wallet className="h-4 w-4 text-green-600 dark:text-green-500" />
+                        <span className="text-sm font-bold text-green-700 dark:text-green-400 hidden sm:block">₹250</span>
+                    </Link>
                     <button className="flex items-center gap-2 rounded-full border border-gray-200 dark:border-gray-700 p-1 pr-3 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
                         <UserCircle className="h-7 w-7 text-gray-400" />
                         <span className="text-sm font-medium text-gray-600 dark:text-gray-300">Login</span>

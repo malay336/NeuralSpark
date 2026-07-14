@@ -1,7 +1,7 @@
 from ninja import ModelSchema, Schema
 from typing import List, Optional
 from datetime import datetime
-from core.models import User, Tag, Question, Answer, Comment, Category, Lecture, PYQ, Product, Service, Inquiry
+from core.models import User, Tag, Question, Answer, Comment, Category, Lecture, PYQ, Product, Service, Inquiry, Quiz, QuizQuestion, QuizOption, Article
 
 class CategorySchema(ModelSchema):
     """Schema for serializing Category objects for lists and nested relationships."""
@@ -24,7 +24,8 @@ class PYQSchema(ModelSchema):
     subject: CategorySchema
     class Meta:
         model = PYQ
-        fields = ['id', 'year', 'question_text', 'answer_text', 'video_url', 'created_at']
+        fields = ['id', 'year', 'is_pyq', 'question_text', 'answer_text', 'video_url', 'created_at']
+
 
 class ProductSchema(ModelSchema):
     """Schema for Products (e.g., mock tests) with basic details and purchase links."""
@@ -125,3 +126,70 @@ class InquiryOutSchema(ModelSchema):
     class Meta:
         model = Inquiry
         fields = ['id', 'name', 'email', 'message', 'created_at']
+
+class QuizOptionSchema(ModelSchema):
+    class Meta:
+        model = QuizOption
+        fields = ['id', 'option_text']  # EXCLUDES is_correct to prevent client-side cheating
+
+class QuizQuestionSchema(ModelSchema):
+    options: List[QuizOptionSchema]
+    class Meta:
+        model = QuizQuestion
+        fields = ['id', 'question_text']
+
+class QuizDetailSchema(ModelSchema):
+    questions: List[QuizQuestionSchema]
+    category: CategorySchema
+    class Meta:
+        model = Quiz
+        fields = ['id', 'title', 'description', 'category']
+
+class QuizListSchema(ModelSchema):
+    category: CategorySchema
+    question_count: int = 0
+    class Meta:
+        model = Quiz
+        fields = ['id', 'title', 'description', 'category']
+
+
+class QuizAnswerSubmission(Schema):
+    question_id: int
+    selected_option_id: int
+
+class QuizSubmissionIn(Schema):
+    answers: List[QuizAnswerSubmission]
+
+class QuestionResultOut(Schema):
+    question_id: int
+    correct_option_id: int
+    is_correct: bool
+    explanation: Optional[str] = None
+
+class QuizSubmissionOut(Schema):
+    quiz_id: int
+    score: int
+    total_questions: int
+    results: List[QuestionResultOut]
+
+
+class AIAssistantInSchema(Schema):
+    question: str
+
+class AIAssistantOutSchema(Schema):
+    response: str
+
+
+class ArticleListSchema(ModelSchema):
+    subject: CategorySchema
+    class Meta:
+        model = Article
+        fields = ['id', 'title', 'summary', 'created_at']
+
+class ArticleDetailSchema(ModelSchema):
+    subject: CategorySchema
+    class Meta:
+        model = Article
+        fields = ['id', 'title', 'summary', 'content', 'created_at']
+
+

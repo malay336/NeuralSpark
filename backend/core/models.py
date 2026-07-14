@@ -51,11 +51,12 @@ class Lecture(models.Model):
 
 class PYQ(models.Model):
     """
-    Previous Year Question (PYQ) model.
+    Previous Year Question (PYQ) or General Practice Question model.
     Stores the raw question text, an answer explanation, and an optional 
     video explanation URL for deeper learning.
     """
-    year = models.IntegerField()
+    year = models.IntegerField(null=True, blank=True)
+    is_pyq = models.BooleanField(default=True, help_text="True if Previous Year Question, False if general Practice Question")
     subject = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='pyqs')
     question_text = models.TextField()
     answer_text = models.TextField(blank=True, null=True)
@@ -63,7 +64,10 @@ class PYQ(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"PYQ {self.year} - {self.subject.name}"
+        if self.is_pyq:
+            return f"PYQ {self.year} - {self.subject.name}"
+        return f"Practice Question {self.id} - {self.subject.name}"
+
 
 class Product(models.Model):
     """
@@ -118,11 +122,12 @@ class Question(models.Model):
 
 class Answer(models.Model):
     """
-    Represents an answer to a specific community Question.
+    Represents an answer to a specific community Question or a PYQ.
     Can be upvoted/downvoted by users, and requires admin moderation before public display.
     """
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='answers')
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers')
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True, blank=True, related_name='answers')
+    pyq = models.ForeignKey(PYQ, on_delete=models.CASCADE, null=True, blank=True, related_name='answers')
     body = models.TextField()
     is_approved = models.BooleanField(default=False, help_text="Checked by admin to approve answer")
     created_at = models.DateTimeField(auto_now_add=True)
@@ -130,22 +135,25 @@ class Answer(models.Model):
     votes = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"Answer by {self.author.username} to '{self.question.title}'"
+        dest = self.question.title if self.question else (f"PYQ {self.pyq.id}" if self.pyq else "Unknown")
+        return f"Answer by {self.author.username} to '{dest}'"
 
 class Comment(models.Model):
     """
-    A simple comment that can be attached to either a Question or an Answer.
+    A simple comment that can be attached to either a Question, an Answer, or a PYQ.
     """
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='comments')
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     
-    # Generic relations alternative (simple approach: bind to either Question or Answer)
+    # Generic relations alternative (simple approach: bind to either Question, Answer, or PYQ)
     question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True, blank=True, related_name='comments')
     answer = models.ForeignKey(Answer, on_delete=models.CASCADE, null=True, blank=True, related_name='comments')
+    pyq = models.ForeignKey(PYQ, on_delete=models.CASCADE, null=True, blank=True, related_name='comments')
 
     def __str__(self):
         return f"Comment by {self.author.username}"
+
 
 class Inquiry(models.Model):
     """
@@ -160,3 +168,56 @@ class Inquiry(models.Model):
 
     def __str__(self):
         return f"Inquiry from {self.name} - {self.email}"
+
+class Quiz(models.Model):
+    """
+    Represents a Practice Quiz belonging to a subject Category.
+    """
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='quizzes')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+class QuizQuestion(models.Model):
+    """
+    A single question associated with a Quiz.
+    Includes an explanation to be displayed after completion.
+    """
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='questions')
+    question_text = models.TextField()
+    explanation = models.TextField(blank=True, null=True, help_text="Explanation shown after quiz completion")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.quiz.title} - {self.question_text[:50]}"
+
+class QuizOption(models.Model):
+    """
+    A multiple-choice option for a QuizQuestion.
+    """
+    question = models.ForeignKey(QuizQuestion, on_delete=models.CASCADE, related_name='options')
+    option_text = models.CharField(max_length=255)
+    is_correct = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.option_text
+
+
+class Article(models.Model):
+    """
+    GeeksforGeeks-style Article for GATE Data Science & AI topics.
+    Supports markdown content for rich text, equations, and code blocks.
+    """
+    title = models.CharField(max_length=255)
+    summary = models.TextField(help_text="Short abstract or description of the article")
+    content = models.TextField(help_text="Full text content (Markdown format supported)")
+    subject = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='articles')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+

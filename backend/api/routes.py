@@ -1,14 +1,17 @@
 from ninja import NinjaAPI
 from django.shortcuts import get_object_or_404
 from typing import List
-from core.models import Question, Answer, Comment, Tag, User, Category, Lecture, PYQ, Product, Service, Inquiry
+from core.models import Question, Answer, Comment, Tag, User, Category, Lecture, PYQ, Product, Service, Inquiry, Quiz, QuizQuestion, QuizOption, Article
 from .schemas import (
     QuestionOutSchema, QuestionInSchema,
     AnswerOutSchema, AnswerInSchema,
     CommentOutSchema, CommentInSchema,
     CategorySchema, LectureSchema, PYQSchema, ProductSchema, ServiceSchema,
     AIGraderInSchema, AIGraderOutSchema,
-    InquiryInSchema, InquiryOutSchema
+    InquiryInSchema, InquiryOutSchema,
+    QuizListSchema, QuizDetailSchema, QuizSubmissionIn, QuizSubmissionOut,
+    AIAssistantInSchema, AIAssistantOutSchema,
+    ArticleListSchema, ArticleDetailSchema
 )
 import os
 from groq import Groq
@@ -331,4 +334,162 @@ def ai_grader_endpoint_customized(
         return {"evaluation": f"Score: {score:.2f}\nFeedback: (Graded by custom local model)"}
     except Exception as e:
         return {"evaluation": f"Error during grading with custom model: {str(e)}"}
+
+
+@api.get("/quizzes/", response=List[QuizListSchema])
+def list_quizzes(request, category_id: Optional[int] = None):
+    """
+    Lists all active practice quizzes, optionally filtered by category.
+    """
+    quizzes = Quiz.objects.all()
+    if category_id:
+        quizzes = quizzes.filter(category_id=category_id)
+    
+    # Annotate question counts
+    for quiz in quizzes:
+        quiz.question_count = quiz.questions.count()
+    return quizzes
+
+
+@api.get("/quizzes/{quiz_id}/", response=QuizDetailSchema)
+def get_quiz(request, quiz_id: int):
+    """
+    Retrieves full details of a practice quiz, including questions and options.
+    Options do not contain correct-answer flags to ensure no client-side cheating.
+    """
+    return get_object_or_404(Quiz, id=quiz_id)
+
+
+@api.post("/quizzes/{quiz_id}/submit/", response=QuizSubmissionOut)
+def submit_quiz(request, quiz_id: int, payload: QuizSubmissionIn):
+    """
+    Grades user answers securely on the server side.
+    Computes total score and returns feedback, correct options, and detailed explanations.
+    """
+    quiz = get_object_or_404(Quiz, id=quiz_id)
+    total_questions = quiz.questions.count()
+    score = 0
+    results = []
+
+    # Map answers by question_id for quick lookup
+    user_answers = {ans.question_id: ans.selected_option_id for ans in payload.answers}
+
+    for question in quiz.questions.all():
+        correct_option = question.options.filter(is_correct=True).first()
+        correct_option_id = correct_option.id if correct_option else -1
+        selected_option_id = user_answers.get(question.id, -1)
+        is_correct = (selected_option_id == correct_option_id)
+        
+        if is_correct:
+            score += 1
+
+        results.append({
+            "question_id": question.id,
+            "correct_option_id": correct_option_id,
+            "is_correct": is_correct,
+            "explanation": question.explanation
+        })
+
+    return {
+        "quiz_id": quiz.id,
+        "score": score,
+        "total_questions": total_questions,
+        "results": results
+    }
+
+
+@api.get("/pyqs/{pyq_id}/answers/", response=List[AnswerOutSchema])
+def list_pyq_answers(request, pyq_id: int):
+    """
+    Retrieves all approved community answers for a PYQ, sorted by votes.
+    """
+    return Answer.objects.filter(pyq_id=pyq_id, is_approved=True).order_by('-votes', 'created_at')
+
+
+@api.post("/pyqs/{pyq_id}/answers/", response=AnswerOutSchema)
+def create_pyq_answer(request, pyq_id: int, payload: AnswerInSchema):
+    """
+    Allows a user to submit an answer/explanation to a PYQ.
+    Answers default to unapproved until reviewed by moderators.
+    """
+    user = get_current_user()
+    pyq = get_object_or_404(PYQ, id=pyq_id)
+    answer = Answer.objects.create(
+        author=user,
+        pyq=pyq,
+        body=payload.body
+    )
+    return answer
+
+
+@api.get("/pyqs/{pyq_id}/comments/", response=List[CommentOutSchema])
+def list_pyq_comments(request, pyq_id: int):
+    """
+    Retrieves comments posted directly on a PYQ.
+    """
+    return Comment.objects.filter(pyq_id=pyq_id).order_by('created_at')
+
+
+@api.post("/pyqs/{pyq_id}/comments/", response=CommentOutSchema)
+def create_pyq_comment(request, pyq_id: int, payload: CommentInSchema):
+    """
+    Allows a user to post a comment directly on a PYQ.
+    """
+    user = get_current_user()
+    pyq = get_object_or_404(PYQ, id=pyq_id)
+    comment = Comment.objects.create(
+        author=user,
+        pyq=pyq,
+        body=payload.body
+    )
+    return comment
+
+
+@api.post("/ai-assistant/ask/", response=AIAssistantOutSchema)
+def ask_ai_assistant(request, payload: AIAssistantInSchema):
+    """
+    Queries the Groq-hosted Llama-4 model to provide immediate tutoring responses to student queries.
+    """
+    client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+    system_prompt = (
+        "You are an expert Computer Science professor and GATE exam tutor. "
+        "Provide detailed, structured, clear, and mathematically precise explanations. "
+        "Include examples, clean markdown code blocks, or simple markdown tables where appropriate. "
+        "Keep the tone encouraging, academic, and highly educational."
+    )
+    
+    try:
+        completion = client.chat.completions.create(
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": payload.question}
+            ],
+            model="meta-llama/llama-4-scout-17b-16e-instruct",
+            temperature=0.3,
+        )
+        return {"response": completion.choices[0].message.content}
+    except Exception as e:
+        return {"response": f"AI Assistant Error: {str(e)}. Please check backend configuration."}
+
+
+@api.get("/articles/", response=List[ArticleListSchema])
+def list_articles(request, category_id: Optional[int] = None):
+    """
+    Lists all theory articles, optionally filtered by subject Category.
+    """
+    articles = Article.objects.all()
+    if category_id:
+        articles = articles.filter(subject_id=category_id)
+    return articles.order_by('-created_at')
+
+
+@api.get("/articles/{article_id}/", response=ArticleDetailSchema)
+def get_article(request, article_id: int):
+    """
+    Retrieves full details of a specific theory article.
+    """
+    return get_object_or_404(Article, id=article_id)
+
+
+
 
