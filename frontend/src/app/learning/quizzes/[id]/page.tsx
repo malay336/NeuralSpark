@@ -28,9 +28,10 @@ type Quiz = {
 type QuestionResult = {
     question_id: number;
     correct_option_id: number;
-    is_correct: bool;
+    is_correct: boolean;
     explanation: string;
 };
+
 
 type QuizSubmissionResponse = {
     quiz_id: number;
