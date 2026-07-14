@@ -41,27 +41,24 @@ export default function Navbar() {
                 </div>
 
                 {/* Navigation Links (Desktop) */}
-                <div className="hidden md:flex flex-1 items-center justify-center gap-6 px-4">
-                    <Link href="/learning" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors">
-                        Learning
+                <div className="hidden lg:flex flex-1 items-center justify-center gap-6 px-4">
+                    <Link href="/learning" className="text-xs font-bold tracking-wider text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors">
+                        LEARNING
                     </Link>
-                    <Link href="/learning/pyqs" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors">
-                        Practice Questions
+                    <Link href="/learning/pyqs" className="text-xs font-bold tracking-wider text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors">
+                        PRACTICE & TEST
                     </Link>
-                    <Link href="/learning/ai-assistant" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors flex items-center gap-1">
-                        AI Assistant
+                    <Link href="/learning/ai-assistant" className="text-xs font-bold tracking-wider text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors">
+                        AI ASSISTANT
                     </Link>
-                    <Link href="/products" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors">
-                        Products
+                    <Link href="/products" className="text-xs font-bold tracking-wider text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors">
+                        PRODUCTS & SERVICES
                     </Link>
-                    <Link href="/services" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors">
-                        Services
+                    <Link href="/dashboard" className="text-xs font-bold tracking-wider text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors">
+                        LIVE DASHBOARD
                     </Link>
-                    <Link href="/dashboard" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors">
-                        LIVE Dashboard
-                    </Link>
-                    <Link href="/about" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors">
-                        About
+                    <Link href="/about" className="text-xs font-bold tracking-wider text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors">
+                        CONTACT US
                     </Link>
                 </div>
 

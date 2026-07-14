@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import api from "@/lib/api";
-import { BookOpen, Calendar, Tag, ArrowRight, Search, Filter, HelpCircle, Layers } from "lucide-react";
+import { BookOpen, Calendar, Tag, ArrowRight, Search, Filter, HelpCircle, Layers, Users, Sparkles } from "lucide-react";
+
 import { motion, AnimatePresence } from "framer-motion";
 
 type Category = {
@@ -102,15 +103,55 @@ export default function PracticeFeed() {
                 <motion.div 
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mb-12"
+                    className="mb-8"
                 >
-                    <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-4 tracking-tight">
-                        Practice Center
+                    <h1 className="text-4xl md:text-5xl font-black text-gray-905 dark:text-white mb-4 tracking-tight uppercase">
+                        PRACTICE & TEST
                     </h1>
-                    <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl leading-relaxed">
+                    <p className="text-lg text-gray-500 dark:text-gray-400 max-w-3xl leading-relaxed">
                         Access exam previous year questions (PYQs) and curated practice problems to master computer science concepts.
                     </p>
                 </motion.div>
+
+                {/* Sub-navigation option links */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
+                   {/* Card 1: Community Q&A */}
+                   <Link href="/learning/questions" className="group p-5 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl hover:shadow-md hover:border-blue-200 dark:hover:border-blue-900/30 transition-all flex items-start gap-4">
+                      <div className="p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors shrink-0">
+                         <Users className="w-5 h-5" />
+                      </div>
+                      <div>
+                         <h3 className="font-bold text-gray-950 dark:text-white text-sm group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Community Q&A</h3>
+                         <p className="text-gray-400 text-xs mt-1">Discuss doubts and peer solutions.</p>
+                      </div>
+                   </Link>
+
+                   {/* Card 2: Interactive Quiz */}
+                   <Link href="/learning/quizzes" className="group p-5 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl hover:shadow-md hover:border-blue-200 dark:hover:border-blue-900/30 transition-all flex items-start gap-4">
+                      <div className="p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors shrink-0">
+                         <HelpCircle className="w-5 h-5" />
+                      </div>
+                      <div>
+                         <h3 className="font-bold text-gray-950 dark:text-white text-sm group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Quizzes</h3>
+                         <p className="text-gray-400 text-xs mt-1">Subject-wise quick challenge sets.</p>
+                      </div>
+                   </Link>
+
+                   {/* Card 3: Test Series */}
+                   <div 
+                      onClick={() => alert("GATE Full-Length Mock Test Series is coming soon in August 2026! Stay tuned.")} 
+                      className="group p-5 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl hover:shadow-md hover:border-blue-200 dark:hover:border-blue-900/30 transition-all flex items-start gap-4 cursor-pointer"
+                   >
+                      <div className="p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors shrink-0">
+                         <Sparkles className="w-5 h-5" />
+                      </div>
+                      <div>
+                         <h3 className="font-bold text-gray-950 dark:text-white text-sm group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">GATE Test Series</h3>
+                         <p className="text-gray-400 text-xs mt-1">Full simulation mock test models.</p>
+                      </div>
+                   </div>
+                </div>
+
 
                 {/* Sub-section Tab Selector */}
                 <div className="flex border-b border-gray-200 dark:border-gray-800 mb-8 gap-6 text-sm font-semibold">

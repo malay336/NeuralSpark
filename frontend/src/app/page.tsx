@@ -75,61 +75,59 @@ export default function Home() {
             ALL IN ONE TECH SOLUTION AT ONE PLACE
           </p>
 
-          {/* Live Earnings & Rank Leaderboard */}
+          {/* Live Earnings & Rank Leaderboard - Rectangular & stretched to full desktop width */}
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.3 }}
-            className="max-w-md mx-auto mb-8 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 shadow-xl text-left"
+            className="w-full max-w-5xl mx-auto mb-8 bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-5 md:p-6 shadow-xl text-left"
           >
-            <div className="flex items-center justify-between border-b border-white/10 pb-2.5 mb-3">
-              <span className="text-xs font-extrabold uppercase tracking-wider text-blue-400 flex items-center gap-1.5">
-                <TrendingUp className="w-3.5 h-3.5" /> Live Leaderboard
+            <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
+              <span className="text-xs font-black uppercase tracking-wider text-blue-400 flex items-center gap-1.5">
+                <TrendingUp className="w-4 h-4" /> Live Platform Rankings & Earnings
               </span>
-              <span className="text-[10px] text-gray-400 font-medium">Rank & Earnings</span>
+              <span className="text-[10px] text-gray-400 font-semibold tracking-wider uppercase">Live Update</span>
             </div>
             
-            <div className="space-y-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
               {leaderboardUsers.map((user) => (
                 <div 
                   key={user.rank} 
-                  className={`flex items-center justify-between p-2 rounded-xl border transition-colors ${
+                  className={`flex flex-col justify-between p-4 rounded-2xl border transition-colors h-full ${
                     user.isUser 
                       ? 'bg-blue-600/20 border-blue-500/40 text-blue-100' 
-                      : 'bg-white/5 border-transparent hover:bg-white/10 text-white'
+                      : 'bg-white/5 border-white/5 hover:bg-white/10 text-white'
                   }`}
                 >
-                  <div className="flex items-center gap-3">
-                    {/* Rank Badge */}
-                    <div className="w-7 h-7 flex items-center justify-center rounded-lg font-bold text-xs shrink-0 bg-white/5">
-                      {user.rank <= 3 ? (
-                        <Trophy className={`w-4 h-4 ${user.medalColor}`} />
-                      ) : (
-                        `#${user.rank}`
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      {/* Rank Indicator */}
+                      <span className="text-[10px] font-bold text-gray-400 tracking-wider uppercase">
+                        Rank {user.rank <= 3 ? "" : `#${user.rank}`}
+                      </span>
+                      {user.rank <= 3 && (
+                        <Trophy className={`w-5 h-5 ${user.medalColor}`} />
+                      )}
+                      {user.isUser && (
+                        <span className="px-1.5 py-0.5 rounded bg-blue-500 text-[8px] uppercase tracking-wider font-extrabold text-white">
+                          You
+                        </span>
                       )}
                     </div>
 
-                    {/* Profile details */}
+                    {/* Profile Name & Level */}
                     <div>
-                      <div className="text-xs font-bold flex items-center gap-1">
-                        {user.name}
-                        {user.isUser && (
-                          <span className="px-1.5 py-0.5 rounded bg-blue-500 text-[8px] uppercase tracking-wider font-extrabold text-white">
-                            You
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-2 mt-0.5 text-[10px] text-gray-400">
-                        <span>Level {user.level}</span>
-                        <span>•</span>
-                        <span className="flex items-center gap-0.5"><Flame className="w-3 h-3 text-orange-500" /> {user.streak}d streak</span>
-                      </div>
+                      <h4 className="text-sm font-bold truncate">{user.name}</h4>
+                      <p className="text-[10px] text-gray-400 mt-0.5">Level {user.level}</p>
                     </div>
                   </div>
 
-                  {/* Money Earned */}
-                  <div className="text-right shrink-0">
-                    <span className="text-xs font-black text-green-400 flex items-center gap-0.5">
+                  {/* Streak and Earnings footer */}
+                  <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between">
+                    <span className="flex items-center gap-0.5 text-[10px] text-gray-300 font-medium">
+                      <Flame className="w-3.5 h-3.5 text-orange-500" /> {user.streak}d streak
+                    </span>
+                    <span className="text-xs font-black text-green-400">
                       ₹{user.earnings.toFixed(2)}
                     </span>
                   </div>
@@ -137,6 +135,7 @@ export default function Home() {
               ))}
             </div>
           </motion.div>
+
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link href="/learning" className="group px-7 py-3.5 rounded-full bg-blue-600 text-white hover:bg-blue-500 transition-all text-base font-bold shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:shadow-[0_0_30px_rgba(37,99,235,0.6)] flex items-center justify-center gap-2 hover:-translate-y-0.5">
