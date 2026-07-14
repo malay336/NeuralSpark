@@ -215,59 +215,63 @@ export default function PracticeFeed() {
                             variants={container}
                             initial="hidden"
                             animate="show"
-                            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+                            className="flex flex-col gap-5"
                         >
-                            {filteredQuestions.map((p) => (
+                            {filteredQuestions.map((p, idx) => (
                                 <motion.div
                                     key={p.id}
                                     variants={item}
                                     layout
                                 >
-                                    <Link href={`/learning/pyqs/${p.id}`} className="block h-full group">
-                                        <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-3xl p-6 hover:shadow-2xl hover:border-blue-200 dark:hover:border-blue-900/40 transition-all cursor-pointer flex flex-col h-full active:scale-[0.99] relative overflow-hidden">
-                                            <div className="absolute top-0 right-0 -mt-10 -mr-10 w-28 h-28 bg-blue-50 dark:bg-blue-950/20 rounded-full opacity-50 pointer-events-none group-hover:scale-110 transition-transform"></div>
-
-                                            <div className="flex items-center justify-between mb-4 relative z-10">
-                                                <div className="flex items-center gap-1 px-2.5 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg text-xs font-bold uppercase tracking-wider">
-                                                    <Tag className="w-3 h-3" />
-                                                    {p.subject.name}
-                                                </div>
-                                                <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 font-bold uppercase">
-                                                    {p.is_pyq ? (
-                                                        <>
-                                                            <Calendar className="w-3.5 h-3.5 text-gray-400" />
-                                                            <span>GATE {p.year}</span>
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <HelpCircle className="w-3.5 h-3.5 text-purple-500" />
-                                                            <span className="text-purple-600 dark:text-purple-400">Practice</span>
-                                                        </>
-                                                    )}
-                                                </div>
-                                            </div>
+                                    <Link href={`/learning/pyqs/${p.id}`} className="block group">
+                                        <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-5 md:p-6 hover:shadow-lg hover:border-blue-200 dark:hover:border-blue-900/30 transition-all cursor-pointer flex flex-col md:flex-row items-start md:items-center gap-6 active:scale-[0.995]">
                                             
-                                            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3 line-clamp-2 leading-snug group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors relative z-10">
-                                                {p.subject.name} - {p.is_pyq ? `GATE ${p.year} Exam` : "Practice Problem"}
-                                            </h3>
-                                            
-                                            <p className="text-gray-500 dark:text-gray-400 text-sm line-clamp-4 leading-relaxed mb-6 flex-1 relative z-10">
-                                                {p.question_text}
-                                            </p>
-
-                                            <div className="pt-4 border-t border-gray-50 dark:border-gray-800 flex items-center justify-between relative z-10">
-                                                <span className="text-xs text-gray-400">
-                                                    {p.is_pyq ? "Exam Question" : "Practice Question"}
-                                                </span>
-                                                <div className="flex items-center gap-1 text-blue-600 dark:text-blue-400 text-sm font-bold group-hover:translate-x-0.5 transition-all outline-none">
-                                                    Solve & Discuss <ArrowRight className="w-4 h-4" />
-                                                </div>
+                                            {/* Big Numeric Index */}
+                                            <div className="text-3xl md:text-4xl font-black text-blue-600/30 dark:text-blue-400/20 w-12 shrink-0 select-none">
+                                                {String(idx + 1).padStart(2, '0')}
                                             </div>
+
+                                            {/* Details & Info */}
+                                            <div className="flex-1 min-w-0">
+                                                <div className="flex items-center gap-2.5 mb-2">
+                                                    <span className="px-2.5 py-0.5 text-[10px] font-extrabold rounded bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 tracking-wider uppercase">
+                                                        {p.subject.name}
+                                                    </span>
+                                                    <div className="flex items-center gap-2 text-[11px] text-gray-400">
+                                                        {p.is_pyq ? (
+                                                            <>
+                                                                <Calendar className="w-3.5 h-3.5" />
+                                                                <span>GATE {p.year} Exam</span>
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <HelpCircle className="w-3.5 h-3.5 text-purple-500" />
+                                                                <span className="text-purple-600 dark:text-purple-400">General Practice</span>
+                                                            </>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                
+                                                <h2 className="text-base md:text-lg font-bold text-gray-950 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-tight mb-1 line-clamp-1">
+                                                    {p.subject.name} - {p.is_pyq ? `GATE ${p.year} Exam Question` : "Practice Problem"}
+                                                </h2>
+                                                
+                                                <p className="text-gray-500 dark:text-gray-400 text-xs md:text-sm line-clamp-2 leading-relaxed">
+                                                    {p.question_text}
+                                                </p>
+                                            </div>
+
+                                            {/* Link Action */}
+                                            <div className="flex items-center gap-1 text-blue-600 dark:text-blue-400 text-sm font-bold group-hover:translate-x-1 transition-all shrink-0">
+                                                Solve & Discuss <ArrowRight className="w-4 h-4" />
+                                            </div>
+
                                         </div>
                                     </Link>
                                 </motion.div>
                             ))}
                         </motion.div>
+
                     )}
                 </AnimatePresence>
             </div>
