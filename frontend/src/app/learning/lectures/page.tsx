@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import api from "@/lib/api";
-import { PlayCircle, Clock, ArrowRight } from "lucide-react";
+import { PlayCircle, Clock, ArrowRight, BookOpen } from "lucide-react";
+
 
 type Category = {
     id: number;
@@ -47,45 +48,33 @@ export default function LecturesPage() {
     }, []);
 
     return (
-        <div className="max-w-7xl mx-auto px-4 py-12">
-            <h1 className="text-4xl font-bold mb-6 text-gray-900">Video Lectures</h1>
-            <p className="text-gray-600 mb-8 max-w-3xl">
-                Master core concepts with our premium curated lecture series. Handpicked for deep learning.
-            </p>
+        <div className="min-h-screen bg-gray-50/50 dark:bg-gray-950 px-4 py-12 transition-colors duration-300">
+            <div className="max-w-7xl mx-auto">
+                <h1 className="text-4xl font-bold mb-6 text-gray-900 dark:text-white">Video Lectures</h1>
+                <p className="text-gray-600 dark:text-gray-400 mb-8 max-w-3xl">
+                    Master core concepts with our premium curated lecture series. Handpicked for deep learning.
+                </p>
 
-            {loading ? (
-                <div className="text-center py-20">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-                </div>
-            ) : lectures.length === 0 ? (
-                <div className="text-center py-20 text-gray-500 border-2 border-dashed rounded-xl">
-                    No lectures available right now.
-                </div>
-            ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {lectures.map((lecture) => (
-                        <Link
-                            key={lecture.id}
-                            href={`/learning/lectures/${lecture.id}`}
-                            className="group flex flex-col bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-xl transition-all hover:-translate-y-1"
-                        >
-                            <div className="aspect-video bg-gray-900 relative flex items-center justify-center">
-                                {/* Simple placeholder for video thumbnail */}
-                                <div className="absolute inset-0 opacity-40 bg-gradient-to-tr from-blue-900 to-transparent"></div>
-                                <PlayCircle className="w-16 h-16 text-white opacity-80 group-hover:scale-110 group-hover:opacity-100 transition-all z-10" />
-                                {lecture.category && (
-                                    <span className="absolute top-4 left-4 bg-black/60 backdrop-blur-md text-white backdrop px-3 py-1 rounded-full text-xs font-medium z-10">
-                                        {lecture.category.name}
-                                    </span>
-                                )}
-                            </div>
-
-                            <div className="p-6 flex-1 flex flex-col">
-                                <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                {loading ? (
+                    <div className="text-center py-20">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+                    </div>
+                ) : lectures.length === 0 ? (
+                    <div className="text-center py-20 text-gray-500 border-2 border-dashed rounded-xl">
+                        No lectures available right now.
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {lectures.map((lecture) => (
+                            <Link key={lecture.id} href={`/learning/lectures/${lecture.id}`} className="group bg-white rounded-3xl border border-gray-100 p-6 flex flex-col hover:shadow-2xl hover:border-blue-200 transition-all">
+                                <div className="p-3 bg-blue-50 text-blue-600 rounded-2xl w-fit mb-5 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                    <BookOpen className="w-6 h-6" />
+                                </div>
+                                <h3 className="text-xl font-bold mb-2 text-gray-950 group-hover:text-blue-600 transition-colors">
                                     {lecture.title}
                                 </h3>
-                                <p className="text-gray-500 text-sm mb-4 line-clamp-2 flex-1">
-                                    {lecture.description || "No description provided."}
+                                <p className="text-gray-500 text-sm leading-relaxed mb-6 line-clamp-3">
+                                    {lecture.description}
                                 </p>
 
                                 <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
@@ -97,11 +86,11 @@ export default function LecturesPage() {
                                         Watch <ArrowRight className="w-4 h-4 ml-1" />
                                     </span>
                                 </div>
-                            </div>
-                        </Link>
-                    ))}
-                </div>
-            )}
+                            </Link>
+                        ))}
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

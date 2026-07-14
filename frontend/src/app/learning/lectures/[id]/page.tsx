@@ -106,44 +106,46 @@ export default function LectureVideoPlayer() {
     };
 
     return (
-        <div className="max-w-6xl mx-auto px-4 py-8">
-            <Link href="/learning/lectures" className="inline-flex items-center text-blue-600 hover:text-blue-500 mb-6 group font-medium transition-colors">
-                <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
-                Back to Syllabus
-            </Link>
+        <div className="min-h-screen bg-gray-50/50 dark:bg-gray-950 px-4 py-12 transition-colors duration-300">
+            <div className="max-w-6xl mx-auto">
+                <Link href="/learning/lectures" className="inline-flex items-center text-blue-600 hover:text-blue-500 mb-6 group font-medium transition-colors">
+                    <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" />
+                    Back to Syllabus
+                </Link>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Video Player Column */}
-                <div className="lg:col-span-2 space-y-6">
-                    <div className="aspect-video w-full bg-gray-900 rounded-xl overflow-hidden shadow-xl ring-1 ring-gray-900/5">
-                        {renderVideo(lecture.video_url)}
-                    </div>
-                </div>
-
-                {/* Details Column */}
-                <div className="lg:col-span-1 border-l lg:pl-8 border-gray-200">
-                    <div className="sticky top-24 space-y-6">
-                        <div>
-                            {lecture.category && (
-                                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 mb-4 border border-indigo-100">
-                                    <BookOpen className="w-3 h-3 mr-1" />
-                                    {lecture.category.name}
-                                </span>
-                            )}
-                            <h1 className="text-3xl font-extrabold text-gray-900 mb-2 leading-tight">
-                                {lecture.title}
-                            </h1>
-                            <div className="flex items-center text-sm text-gray-500 gap-4 mb-6">
-                                <span className="flex items-center"><PlayCircle className="w-4 h-4 mr-1" /> Lecture {lecture.order}</span>
-                                <span className="flex items-center"><Clock className="w-4 h-4 mr-1" /> {new Date(lecture.created_at).toLocaleDateString()}</span>
-                            </div>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    {/* Video Player Column */}
+                    <div className="lg:col-span-2 space-y-6">
+                        <div className="aspect-video w-full bg-gray-900 rounded-xl overflow-hidden shadow-xl ring-1 ring-gray-900/5">
+                            {renderVideo(lecture.video_url)}
                         </div>
+                    </div>
 
-                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-100">
-                            <h3 className="font-semibold text-gray-900 mb-3 text-lg">About this Lecture</h3>
-                            <p className="text-gray-600 leading-relaxed whitespace-pre-line">
-                                {lecture.description || "No description provided for this lecture."}
-                            </p>
+                    {/* Details Column */}
+                    <div className="lg:col-span-1 border-l lg:pl-8 border-gray-255 dark:border-gray-800">
+                        <div className="sticky top-24 space-y-6">
+                            <div>
+                                {lecture.category && (
+                                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 mb-4 border border-indigo-100 dark:border-indigo-900/40">
+                                        <BookOpen className="w-3 h-3 mr-1" />
+                                        {lecture.category.name}
+                                    </span>
+                                )}
+                                <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-2 leading-tight">
+                                    {lecture.title}
+                                </h1>
+                                <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 gap-4 mb-6">
+                                    <span className="flex items-center"><PlayCircle className="w-4 h-4 mr-1" /> Lecture {lecture.order}</span>
+                                    <span className="flex items-center"><Clock className="w-4 h-4 mr-1" /> {new Date(lecture.created_at).toLocaleDateString()}</span>
+                                </div>
+                            </div>
+
+                            <div className="bg-white dark:bg-gray-900 p-6 rounded-xl border border-gray-100 dark:border-gray-800 shadow-md">
+                                <h3 className="font-semibold text-gray-950 dark:text-white mb-3 text-lg">About this Lecture</h3>
+                                <p className="text-gray-600 dark:text-gray-400 leading-relaxed whitespace-pre-line text-sm">
+                                    {lecture.description || "No description provided for this lecture."}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
