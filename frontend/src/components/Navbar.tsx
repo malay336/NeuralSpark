@@ -44,23 +44,28 @@ export default function Navbar() {
 
                 {/* Navigation Links (Desktop) */}
                 <div className="hidden lg:flex flex-1 items-center justify-center gap-6 px-4">
-                    <Link href="/learning" className="text-xs font-bold tracking-wider text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors">
-                        LEARNING
+                    <Link href="/learning" className="text-[10px] lg:text-xs font-black tracking-wider text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors text-center flex flex-col items-center justify-center leading-tight">
+                        <span>LEARNING</span>
                     </Link>
-                    <Link href="/learning/pyqs" className="text-xs font-bold tracking-wider text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors">
-                        PRACTICE & TEST
+                    <Link href="/learning/pyqs" className="text-[10px] lg:text-xs font-black tracking-wider text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors text-center flex flex-col items-center justify-center leading-tight">
+                        <span>PRACTICE &</span>
+                        <span>TEST</span>
                     </Link>
-                    <Link href="/learning/ai-assistant" className="text-xs font-bold tracking-wider text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors">
-                        AI ASSISTANT
+                    <Link href="/learning/ai-assistant" className="text-[10px] lg:text-xs font-black tracking-wider text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors text-center flex flex-col items-center justify-center leading-tight">
+                        <span>AI</span>
+                        <span>ASSISTANT</span>
                     </Link>
-                    <Link href="/products" className="text-xs font-bold tracking-wider text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors">
-                        PRODUCTS & SERVICES
+                    <Link href="/products" className="text-[10px] lg:text-xs font-black tracking-wider text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors text-center flex flex-col items-center justify-center leading-tight">
+                        <span>PRODUCTS &</span>
+                        <span>SERVICES</span>
                     </Link>
-                    <Link href="/dashboard" className="text-xs font-bold tracking-wider text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors">
-                        LIVE DASHBOARD
+                    <Link href="/dashboard" className="text-[10px] lg:text-xs font-black tracking-wider text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors text-center flex flex-col items-center justify-center leading-tight">
+                        <span>LIVE</span>
+                        <span>DASHBOARD</span>
                     </Link>
-                    <Link href="/about" className="text-xs font-bold tracking-wider text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors">
-                        CONTACT US
+                    <Link href="/about" className="text-[10px] lg:text-xs font-black tracking-wider text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors text-center flex flex-col items-center justify-center leading-tight">
+                        <span>CONTACT</span>
+                        <span>US</span>
                     </Link>
                 </div>
 

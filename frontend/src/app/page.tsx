@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { BookOpen, HelpCircle, Package, Briefcase, ChevronRight, Trophy, Flame, Award, TrendingUp, Sparkles } from "lucide-react";
+import { BookOpen, HelpCircle, Package, Briefcase, ChevronRight, Trophy, Flame, Award, TrendingUp, Sparkles, User } from "lucide-react";
+
 import { motion } from "framer-motion";
 
 const leaderboardUsers = [
@@ -75,7 +76,7 @@ export default function Home() {
             ALL IN ONE TECH SOLUTION AT ONE PLACE
           </p>
 
-          {/* Live Earnings & Rank Leaderboard - Rectangular & stretched to full desktop width */}
+          {/* Live Earnings & Rank Leaderboard - Stretched row format index */}
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -89,50 +90,60 @@ export default function Home() {
               <span className="text-[10px] text-gray-400 font-semibold tracking-wider uppercase">Live Update</span>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-              {leaderboardUsers.map((user) => (
-                <div 
-                  key={user.rank} 
-                  className={`flex flex-col justify-between p-4 rounded-2xl border transition-colors h-full ${
-                    user.isUser 
-                      ? 'bg-blue-600/20 border-blue-500/40 text-blue-100' 
-                      : 'bg-white/5 border-white/5 hover:bg-white/10 text-white'
-                  }`}
-                >
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      {/* Rank Indicator */}
-                      <span className="text-[10px] font-bold text-gray-400 tracking-wider uppercase">
-                        Rank {user.rank <= 3 ? "" : `#${user.rank}`}
+            <div className="flex flex-col gap-3">
+              {leaderboardUsers.map((user) => {
+                const indexStr = user.isUser ? "142" : `0${user.rank}`;
+                return (
+                  <div 
+                    key={user.rank} 
+                    className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl border transition-colors gap-3 ${
+                      user.isUser 
+                        ? 'bg-blue-600/20 border-blue-500/40 text-blue-100' 
+                        : 'bg-white/5 border-white/5 hover:bg-white/10 text-white'
+                    }`}
+                  >
+                    {/* Left side: Rank index, Trophy, Name & Level */}
+                    <div className="flex items-center gap-4">
+                      {/* Index Number */}
+                      <span className="text-sm font-black tracking-wider text-gray-400 font-mono w-8 shrink-0">
+                        {indexStr}
                       </span>
-                      {user.rank <= 3 && (
-                        <Trophy className={`w-5 h-5 ${user.medalColor}`} />
-                      )}
-                      {user.isUser && (
-                        <span className="px-1.5 py-0.5 rounded bg-blue-500 text-[8px] uppercase tracking-wider font-extrabold text-white">
-                          You
-                        </span>
-                      )}
+
+                      {/* Medal or avatar icon placeholder */}
+                      <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center shrink-0">
+                        {user.rank <= 3 ? (
+                          <Trophy className={`w-5 h-5 ${user.medalColor}`} />
+                        ) : (
+                          <User className="w-4 h-4 text-gray-400" />
+                        )}
+                      </div>
+
+                      {/* Name Details */}
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h4 className="text-sm font-bold">{user.name}</h4>
+                          {user.isUser && (
+                            <span className="px-1.5 py-0.5 rounded bg-blue-500 text-[8px] uppercase tracking-wider font-extrabold text-white">
+                              You
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-[10px] text-gray-400 mt-0.5">Level {user.level}</p>
+                      </div>
                     </div>
 
-                    {/* Profile Name & Level */}
-                    <div>
-                      <h4 className="text-sm font-bold truncate">{user.name}</h4>
-                      <p className="text-[10px] text-gray-400 mt-0.5">Level {user.level}</p>
+                    {/* Middle/Right: Streak & Payout */}
+                    <div className="flex items-center justify-between sm:justify-end gap-6 border-t border-white/5 sm:border-t-0 pt-3 sm:pt-0">
+                      <span className="flex items-center gap-1.5 text-xs text-gray-300 font-medium">
+                        <Flame className="w-4 h-4 text-orange-500" /> {user.streak}d login streak
+                      </span>
+                      <span className="text-sm font-black text-green-400 font-mono min-w-[80px] text-right">
+                        ₹{user.earnings.toFixed(2)}
+                      </span>
                     </div>
                   </div>
-
-                  {/* Streak and Earnings footer */}
-                  <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between">
-                    <span className="flex items-center gap-0.5 text-[10px] text-gray-300 font-medium">
-                      <Flame className="w-3.5 h-3.5 text-orange-500" /> {user.streak}d streak
-                    </span>
-                    <span className="text-xs font-black text-green-400">
-                      ₹{user.earnings.toFixed(2)}
-                    </span>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </motion.div>
 
