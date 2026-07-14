@@ -41,7 +41,7 @@ export default function Navbar() {
                 </div>
 
                 {/* Navigation Links (Desktop) */}
-                <div className="hidden md:flex flex-1 items-center justify-center gap-8 px-4">
+                <div className="hidden md:flex flex-1 items-center justify-center gap-6 px-4">
                     <Link href="/learning" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors">
                         Learning
                     </Link>
@@ -57,11 +57,11 @@ export default function Navbar() {
                     <Link href="/services" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors">
                         Services
                     </Link>
-                    <Link href="/about" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors">
-                        About Us
+                    <Link href="/dashboard" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors">
+                        LIVE Dashboard
                     </Link>
-                    <Link href="/contact" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors">
-                        Contact Us
+                    <Link href="/about" className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors">
+                        About
                     </Link>
                 </div>
 
@@ -78,7 +78,7 @@ export default function Navbar() {
                     <button className="p-2 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-white rounded-full transition-colors">
                         <Search className="h-5 w-5" />
                     </button>
-                    <Link href="/wallet" className="p-2 text-gray-500 dark:text-gray-400 hover:text-green-500 dark:hover:text-green-400 rounded-full transition-colors flex items-center gap-1.5 bg-green-50 dark:bg-green-900/10 px-3 border border-green-100 dark:border-green-900/30">
+                    <Link href="/dashboard" className="p-2 text-gray-500 dark:text-gray-400 hover:text-green-500 dark:hover:text-green-400 rounded-full transition-colors flex items-center gap-1.5 bg-green-50 dark:bg-green-900/10 px-3 border border-green-100 dark:border-green-900/30">
                         <Wallet className="h-4 w-4 text-green-600 dark:text-green-500" />
                         <span className="text-sm font-bold text-green-700 dark:text-green-400 hidden sm:block">₹250</span>
                     </Link>
