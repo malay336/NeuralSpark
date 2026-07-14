@@ -43,27 +43,27 @@ export default function Navbar() {
                 </div>
 
                 {/* Navigation Links (Desktop) */}
-                <div className="hidden lg:flex flex-1 items-center justify-center gap-6 px-4">
-                    <Link href="/learning" className="text-[10px] lg:text-xs font-black tracking-wider text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors text-center flex flex-col items-center justify-center leading-tight">
+                <div className="hidden lg:flex flex-1 items-center justify-center gap-3 px-4">
+                    <Link href="/learning" className="px-3 lg:px-4 py-2 rounded-xl bg-gray-50/60 dark:bg-white/5 border border-gray-150 dark:border-white/5 text-[10px] lg:text-xs font-black tracking-wider text-gray-700 dark:text-gray-200 hover:bg-blue-650 dark:hover:bg-blue-600 hover:text-white dark:hover:text-white hover:border-transparent dark:hover:border-transparent hover:shadow-md transition-all duration-200 active:scale-[0.97] text-center flex flex-col items-center justify-center leading-tight w-28 lg:w-32 h-11">
                         <span>LEARNING</span>
                     </Link>
-                    <Link href="/learning/pyqs" className="text-[10px] lg:text-xs font-black tracking-wider text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors text-center flex flex-col items-center justify-center leading-tight">
+                    <Link href="/learning/pyqs" className="px-3 lg:px-4 py-2 rounded-xl bg-gray-50/60 dark:bg-white/5 border border-gray-150 dark:border-white/5 text-[10px] lg:text-xs font-black tracking-wider text-gray-700 dark:text-gray-200 hover:bg-blue-650 dark:hover:bg-blue-600 hover:text-white dark:hover:text-white hover:border-transparent dark:hover:border-transparent hover:shadow-md transition-all duration-200 active:scale-[0.97] text-center flex flex-col items-center justify-center leading-tight w-28 lg:w-32 h-11">
                         <span>PRACTICE &</span>
                         <span>TEST</span>
                     </Link>
-                    <Link href="/learning/ai-assistant" className="text-[10px] lg:text-xs font-black tracking-wider text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors text-center flex flex-col items-center justify-center leading-tight">
+                    <Link href="/learning/ai-assistant" className="px-3 lg:px-4 py-2 rounded-xl bg-gray-50/60 dark:bg-white/5 border border-gray-150 dark:border-white/5 text-[10px] lg:text-xs font-black tracking-wider text-gray-700 dark:text-gray-200 hover:bg-blue-650 dark:hover:bg-blue-600 hover:text-white dark:hover:text-white hover:border-transparent dark:hover:border-transparent hover:shadow-md transition-all duration-200 active:scale-[0.97] text-center flex flex-col items-center justify-center leading-tight w-28 lg:w-32 h-11">
                         <span>AI</span>
                         <span>ASSISTANT</span>
                     </Link>
-                    <Link href="/products" className="text-[10px] lg:text-xs font-black tracking-wider text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors text-center flex flex-col items-center justify-center leading-tight">
+                    <Link href="/products" className="px-3 lg:px-4 py-2 rounded-xl bg-gray-50/60 dark:bg-white/5 border border-gray-150 dark:border-white/5 text-[10px] lg:text-xs font-black tracking-wider text-gray-700 dark:text-gray-200 hover:bg-blue-650 dark:hover:bg-blue-600 hover:text-white dark:hover:text-white hover:border-transparent dark:hover:border-transparent hover:shadow-md transition-all duration-200 active:scale-[0.97] text-center flex flex-col items-center justify-center leading-tight w-28 lg:w-32 h-11">
                         <span>PRODUCTS &</span>
                         <span>SERVICES</span>
                     </Link>
-                    <Link href="/dashboard" className="text-[10px] lg:text-xs font-black tracking-wider text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors text-center flex flex-col items-center justify-center leading-tight">
+                    <Link href="/dashboard" className="px-3 lg:px-4 py-2 rounded-xl bg-gray-50/60 dark:bg-white/5 border border-gray-150 dark:border-white/5 text-[10px] lg:text-xs font-black tracking-wider text-gray-700 dark:text-gray-200 hover:bg-blue-650 dark:hover:bg-blue-600 hover:text-white dark:hover:text-white hover:border-transparent dark:hover:border-transparent hover:shadow-md transition-all duration-200 active:scale-[0.97] text-center flex flex-col items-center justify-center leading-tight w-28 lg:w-32 h-11">
                         <span>LIVE</span>
                         <span>DASHBOARD</span>
                     </Link>
-                    <Link href="/about" className="text-[10px] lg:text-xs font-black tracking-wider text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-white transition-colors text-center flex flex-col items-center justify-center leading-tight">
+                    <Link href="/about" className="px-3 lg:px-4 py-2 rounded-xl bg-gray-50/60 dark:bg-white/5 border border-gray-150 dark:border-white/5 text-[10px] lg:text-xs font-black tracking-wider text-gray-700 dark:text-gray-200 hover:bg-blue-650 dark:hover:bg-blue-600 hover:text-white dark:hover:text-white hover:border-transparent dark:hover:border-transparent hover:shadow-md transition-all duration-200 active:scale-[0.97] text-center flex flex-col items-center justify-center leading-tight w-28 lg:w-32 h-11">
                         <span>CONTACT</span>
                         <span>US</span>
                     </Link>
