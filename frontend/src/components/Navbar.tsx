@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Search, UserCircle, Menu, Sun, Moon, Wallet } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTheme } from '@/context/ThemeContext';
+import { useAuth } from '@/context/AuthContext';
 
 /**
  * Navbar Component (Global Navigation)
@@ -14,6 +15,7 @@ import { useTheme } from '@/context/ThemeContext';
  */
 export default function Navbar() {
     const { theme, toggleTheme } = useTheme();
+    const { user, logout, isLoggedIn } = useAuth();
 
     return (
         <motion.nav
@@ -79,10 +81,34 @@ export default function Navbar() {
                         <Wallet className="h-4 w-4 text-green-600 dark:text-green-500" />
                         <span className="text-sm font-bold text-green-700 dark:text-green-400 hidden sm:block">₹250</span>
                     </Link>
-                    <button className="flex items-center gap-2 rounded-full border border-gray-200 dark:border-gray-700 p-1 pr-3 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                        <UserCircle className="h-7 w-7 text-gray-400" />
-                        <span className="text-sm font-medium text-gray-600 dark:text-gray-300">Login</span>
-                    </button>
+
+                    {isLoggedIn ? (
+                        <div className="relative group">
+                            <button className="flex items-center gap-2 rounded-full border border-gray-200 dark:border-gray-800 p-1 pr-3 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                                <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-500 text-white flex items-center justify-center font-black text-xs">
+                                    {user?.name?.charAt(0).toUpperCase() || 'U'}
+                                </div>
+                                <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                                    {user?.name}
+                                </span>
+                            </button>
+                            
+                            {/* Dropdown Menu */}
+                            <div className="absolute right-0 top-full mt-2 w-40 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl shadow-lg p-2 hidden group-hover:block z-50">
+                                <Link href="/dashboard" className="w-full text-left block px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-850 text-xs font-bold text-gray-700 dark:text-gray-300 rounded-lg">
+                                    Dashboard
+                                </Link>
+                                <button onClick={logout} className="w-full text-left block px-3 py-2 hover:bg-red-50 dark:hover:bg-red-950/20 text-xs font-bold text-red-650 dark:text-red-450 rounded-lg">
+                                    Logout
+                                </button>
+                            </div>
+                        </div>
+                    ) : (
+                        <Link href="/login" className="flex items-center gap-2 rounded-full border border-gray-205 dark:border-gray-700 p-1 pr-3 hover:bg-gray-105 dark:hover:bg-gray-800 transition-colors">
+                            <UserCircle className="h-7 w-7 text-gray-400" />
+                            <span className="text-sm font-medium text-gray-650 dark:text-gray-300">Login</span>
+                        </Link>
+                    )}
                 </div>
 
             </div>

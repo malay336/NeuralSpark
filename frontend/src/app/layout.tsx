@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import AIAssistantWidget from "@/components/AIAssistantWidget";
 
 import { ThemeProvider } from "@/context/ThemeContext";
+import { AuthProvider } from "@/context/AuthContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,14 +22,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} bg-gray-50 dark:bg-black min-h-screen flex flex-col transition-colors duration-300`}>
-        <ThemeProvider>
-          <Navbar />
-          <main className="flex-1 w-full">
-            {children}
-          </main>
+        <AuthProvider>
+          <ThemeProvider>
+            <Navbar />
+            <main className="flex-1 w-full">
+              {children}
+            </main>
 
-          <AIAssistantWidget />
-        </ThemeProvider>
+            <AIAssistantWidget />
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );
