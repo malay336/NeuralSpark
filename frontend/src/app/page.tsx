@@ -1,8 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { BookOpen, HelpCircle, Package, Briefcase, ChevronRight } from "lucide-react";
+import { BookOpen, HelpCircle, Package, Briefcase, ChevronRight, Trophy, Flame, Award, TrendingUp, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
+
+const leaderboardUsers = [
+  { rank: 1, name: "Siddharth Sharma", level: 8, streak: 14, earnings: 1850.00, medalColor: "text-yellow-400" },
+  { rank: 2, name: "Neha Patel", level: 7, streak: 12, earnings: 1520.00, medalColor: "text-gray-300" },
+  { rank: 3, name: "Rahul Kumar", level: 6, streak: 9, earnings: 1180.00, medalColor: "text-amber-600" },
+  { rank: 142, name: "Arjun Singh (You)", level: 4, streak: 4, earnings: 250.00, isUser: true }
+];
 
 /**
  * Home Component (Landing Page)
@@ -38,7 +45,7 @@ export default function Home() {
         This section uses absolute positioning for background effects (like the blurred blue circle) 
         and relative positioning for the interactive text to create depth.
       */}
-      <section className="relative flex-1 flex flex-col items-center justify-center text-center px-4 py-32 bg-gray-950 text-white overflow-hidden">
+      <section className="relative flex-1 flex flex-col items-center justify-center text-center px-4 py-20 bg-gray-950 text-white overflow-hidden">
         {/* Decorative Background Elements */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-600/20 blur-[120px] rounded-full pointer-events-none"></div>
         <div className="absolute bottom-0 w-full h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent"></div>
@@ -48,34 +55,98 @@ export default function Home() {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
-          className="relative z-10"
+          className="relative z-10 w-full max-w-4xl mx-auto"
         >
           {/* Animated Badge */}
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className="mb-8 inline-flex items-center px-4 py-1.5 rounded-full border border-gray-700/50 bg-gray-800/30 backdrop-blur-md text-sm text-gray-300 shadow-sm"
+            className="mb-6 inline-flex items-center px-4 py-1.5 rounded-full border border-gray-700/50 bg-gray-800/30 backdrop-blur-md text-xs sm:text-sm text-gray-300 shadow-sm"
           >
             <span className="flex h-2 w-2 rounded-full bg-blue-500 mr-2 animate-pulse"></span>
             Welcome to the future of learning
           </motion.div>
 
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-br from-white via-blue-100 to-indigo-400 drop-shadow-sm">
+          <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight mb-4 bg-clip-text text-transparent bg-gradient-to-br from-white via-blue-100 to-indigo-400 drop-shadow-sm">
             NeuralSpark
           </h1>
-          <p className="text-lg md:text-xl text-blue-200/80 max-w-3xl mb-12 font-medium tracking-wide uppercase mx-auto">
+          <p className="text-sm sm:text-base text-blue-200/80 max-w-3xl mb-8 font-bold tracking-widest uppercase mx-auto">
             ALL IN ONE TECH SOLUTION AT ONE PLACE
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
-            <Link href="/learning" className="group px-8 py-4 rounded-full bg-blue-600 text-white hover:bg-blue-500 transition-all text-lg font-bold shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:shadow-[0_0_30px_rgba(37,99,235,0.6)] flex items-center justify-center gap-2 hover:-translate-y-1">
+          {/* Live Earnings & Rank Leaderboard */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3 }}
+            className="max-w-md mx-auto mb-8 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 shadow-xl text-left"
+          >
+            <div className="flex items-center justify-between border-b border-white/10 pb-2.5 mb-3">
+              <span className="text-xs font-extrabold uppercase tracking-wider text-blue-400 flex items-center gap-1.5">
+                <TrendingUp className="w-3.5 h-3.5" /> Live Leaderboard
+              </span>
+              <span className="text-[10px] text-gray-400 font-medium">Rank & Earnings</span>
+            </div>
+            
+            <div className="space-y-2">
+              {leaderboardUsers.map((user) => (
+                <div 
+                  key={user.rank} 
+                  className={`flex items-center justify-between p-2 rounded-xl border transition-colors ${
+                    user.isUser 
+                      ? 'bg-blue-600/20 border-blue-500/40 text-blue-100' 
+                      : 'bg-white/5 border-transparent hover:bg-white/10 text-white'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    {/* Rank Badge */}
+                    <div className="w-7 h-7 flex items-center justify-center rounded-lg font-bold text-xs shrink-0 bg-white/5">
+                      {user.rank <= 3 ? (
+                        <Trophy className={`w-4 h-4 ${user.medalColor}`} />
+                      ) : (
+                        `#${user.rank}`
+                      )}
+                    </div>
+
+                    {/* Profile details */}
+                    <div>
+                      <div className="text-xs font-bold flex items-center gap-1">
+                        {user.name}
+                        {user.isUser && (
+                          <span className="px-1.5 py-0.5 rounded bg-blue-500 text-[8px] uppercase tracking-wider font-extrabold text-white">
+                            You
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2 mt-0.5 text-[10px] text-gray-400">
+                        <span>Level {user.level}</span>
+                        <span>•</span>
+                        <span className="flex items-center gap-0.5"><Flame className="w-3 h-3 text-orange-500" /> {user.streak}d streak</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Money Earned */}
+                  <div className="text-right shrink-0">
+                    <span className="text-xs font-black text-green-400 flex items-center gap-0.5">
+                      ₹{user.earnings.toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Link href="/learning" className="group px-7 py-3.5 rounded-full bg-blue-600 text-white hover:bg-blue-500 transition-all text-base font-bold shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:shadow-[0_0_30px_rgba(37,99,235,0.6)] flex items-center justify-center gap-2 hover:-translate-y-0.5">
               Start Learning <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
-            <Link href="/services" className="group px-8 py-4 rounded-full bg-white/10 text-white backdrop-blur-md border border-white/10 hover:bg-white/20 transition-all text-lg font-bold flex items-center justify-center gap-2 hover:-translate-y-1">
+            <Link href="/services" className="group px-7 py-3.5 rounded-full bg-white/10 text-white backdrop-blur-md border border-white/10 hover:bg-white/20 transition-all text-base font-bold flex items-center justify-center gap-2 hover:-translate-y-0.5">
               Explore Services
             </Link>
           </div>
+
         </motion.div>
       </section>
 
