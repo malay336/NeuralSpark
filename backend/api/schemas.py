@@ -193,3 +193,59 @@ class ArticleDetailSchema(ModelSchema):
         fields = ['id', 'title', 'summary', 'content', 'created_at']
 
 
+class UploadResponseSchema(Schema):
+    success: bool
+    message: str
+    items_created: int = 0
+    details: Optional[List[str]] = []
+
+class PYQUploadInSchema(Schema):
+    question_text: str
+    answer_text: Optional[str] = ""
+    year: Optional[int] = None
+    is_pyq: bool = True
+    subject_name: Optional[str] = "General CS & AI"
+    video_url: Optional[str] = None
+
+class ArticleUploadInSchema(Schema):
+    title: str
+    summary: str
+    content: str
+    subject_name: Optional[str] = "General CS & AI"
+
+class LectureUploadInSchema(Schema):
+    title: str
+    description: Optional[str] = ""
+    video_url: str
+    subject_name: Optional[str] = "General CS & AI"
+    order: Optional[int] = 0
+
+class QuizOptionInSchema(Schema):
+    option_text: str
+    is_correct: bool = False
+
+class QuizQuestionInSchema(Schema):
+    question_text: str
+    explanation: Optional[str] = ""
+    options: List[QuizOptionInSchema]
+
+class QuizUploadInSchema(Schema):
+    title: str
+    description: Optional[str] = ""
+    subject_name: Optional[str] = "General CS & AI"
+    questions: List[QuizQuestionInSchema]
+
+class ManualUploadInSchema(Schema):
+    content_type: str # 'pyq', 'question', 'article', 'lecture', 'quiz'
+    pyq: Optional[PYQUploadInSchema] = None
+    question: Optional[QuestionInSchema] = None
+    article: Optional[ArticleUploadInSchema] = None
+    lecture: Optional[LectureUploadInSchema] = None
+    quiz: Optional[QuizUploadInSchema] = None
+
+class BatchJSONInSchema(Schema):
+    content_type: str # 'pyq', 'question', 'article', 'lecture', 'quiz'
+    json_data: str # JSON array string
+
+
+

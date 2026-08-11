@@ -1,13 +1,10 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import AIAssistantWidget from "@/components/AIAssistantWidget";
 
 import { ThemeProvider } from "@/context/ThemeContext";
 import { AuthProvider } from "@/context/AuthContext";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "NeuralSpark",
@@ -20,8 +17,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} bg-gray-50 dark:bg-black min-h-screen flex flex-col transition-colors duration-300`}>
+    <html lang="en" suppressHydrationWarning>
+      <body suppressHydrationWarning className="font-sans bg-gray-50 dark:bg-black min-h-screen flex flex-col transition-colors duration-300">
         <AuthProvider>
           <ThemeProvider>
             <Navbar />

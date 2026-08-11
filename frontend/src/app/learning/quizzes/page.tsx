@@ -40,10 +40,10 @@ export default function QuizDashboard() {
         }
     };
 
-    const categories = ["All", ...Array.from(new Set(quizzes.map(q => q.category.name)))];
+    const categories = ["All", ...Array.from(new Set(quizzes.map(q => q.category?.name).filter(Boolean)))];
 
     const filteredQuizzes = quizzes.filter(q => {
-        return selectedCategory === "All" || q.category.name === selectedCategory;
+        return selectedCategory === "All" || q.category?.name === selectedCategory;
     });
 
     // Parent stagger container variant
@@ -97,9 +97,9 @@ export default function QuizDashboard() {
                     <div className="flex items-center gap-3 w-full sm:w-auto overflow-x-auto pb-2 sm:pb-0 scrollbar-hide">
                         <Filter className="w-5 h-5 text-gray-400 shrink-0" />
                         <div className="flex gap-2">
-                            {categories.map((cat) => (
+                            {categories.map((cat, idx) => (
                                 <button
-                                    key={cat}
+                                    key={`${cat}-${idx}`}
                                     onClick={() => setSelectedCategory(cat)}
                                     className={`px-4 py-2 text-sm font-semibold rounded-xl transition-all whitespace-nowrap ${
                                         selectedCategory === cat

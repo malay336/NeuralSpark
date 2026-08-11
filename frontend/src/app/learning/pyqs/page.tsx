@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import api from "@/lib/api";
-import { BookOpen, Calendar, Tag, ArrowRight, Search, Filter, HelpCircle, Layers, Users, Sparkles } from "lucide-react";
+import { BookOpen, Calendar, Tag, ArrowRight, Search, Filter, HelpCircle, Layers, Users, Sparkles, UploadCloud } from "lucide-react";
 
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -49,13 +49,13 @@ export default function PracticeFeed() {
     };
 
     // Derived values for category filters
-    const categories = ["All", ...Array.from(new Set(questions.map(q => q.subject.name)))];
+    const categories = ["All", ...Array.from(new Set(questions.map(q => q.subject?.name).filter(Boolean)))];
     
     // Apply filters (search, category, and type tab)
     const filteredQuestions = questions.filter(q => {
         const matchesSearch = q.question_text.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                             q.subject.name.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesCategory = selectedCategory === "All" || q.subject.name === selectedCategory;
+                             (q.subject?.name || "").toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesCategory = selectedCategory === "All" || q.subject?.name === selectedCategory;
         
         let matchesTab = true;
         if (activeTab === "PYQ") {
@@ -114,7 +114,7 @@ export default function PracticeFeed() {
                 </motion.div>
 
                 {/* Sub-navigation option links */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
                    {/* Card 1: Community Q&A */}
                    <Link href="/learning/questions" className="group p-5 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl hover:shadow-md hover:border-blue-200 dark:hover:border-blue-900/30 transition-all flex items-start gap-4">
                       <div className="p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors shrink-0">
@@ -150,6 +150,20 @@ export default function PracticeFeed() {
                          <p className="text-gray-400 text-xs mt-1">Full simulation mock test models.</p>
                       </div>
                    </div>
+
+                   {/* Card 4: Upload & Ingest Content (Admin) */}
+                   <Link href="/upload" className="group p-5 bg-gradient-to-br from-blue-50/80 to-purple-50/80 dark:from-blue-950/20 dark:to-purple-950/20 border border-blue-200/60 dark:border-blue-800/40 rounded-2xl hover:shadow-md hover:border-blue-400 transition-all flex items-start gap-4">
+                      <div className="p-3 bg-blue-600 text-white rounded-xl group-hover:scale-105 transition-transform shrink-0 shadow-sm">
+                         <UploadCloud className="w-5 h-5" />
+                      </div>
+                      <div>
+                         <div className="flex items-center gap-1.5">
+                            <h3 className="font-bold text-gray-950 dark:text-white text-sm group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Upload Content</h3>
+                            <span className="px-1.5 py-0.5 rounded bg-blue-600 text-white text-[9px] font-black uppercase">Admin</span>
+                         </div>
+                         <p className="text-gray-500 dark:text-gray-400 text-xs mt-1">Ingest PYQs, articles & PDF sets.</p>
+                      </div>
+                   </Link>
                 </div>
 
 
@@ -212,9 +226,9 @@ export default function PracticeFeed() {
                     <div className="flex items-center gap-4 w-full lg:w-auto overflow-x-auto pb-2 lg:pb-0 scrollbar-hide">
                         <Filter className="w-5 h-5 text-gray-400 hidden lg:block" />
                         <div className="flex gap-2">
-                            {categories.map((cat) => (
+                            {categories.map((cat, idx) => (
                                 <button
-                                    key={cat}
+                                    key={`${cat}-${idx}`}
                                     onClick={() => setSelectedCategory(cat)}
                                     className={`px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-all ${
                                         selectedCategory === cat 

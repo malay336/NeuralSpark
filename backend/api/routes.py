@@ -1,6 +1,8 @@
-from ninja import NinjaAPI
+from ninja import NinjaAPI, File, UploadedFile, Form
 from django.shortcuts import get_object_or_404
-from typing import List
+from typing import List, Optional
+import os, json, csv, io
+import PyPDF2
 from core.models import Question, Answer, Comment, Tag, User, Category, Lecture, PYQ, Product, Service, Inquiry, Quiz, QuizQuestion, QuizOption, Article
 from .schemas import (
     QuestionOutSchema, QuestionInSchema,
@@ -11,9 +13,9 @@ from .schemas import (
     InquiryInSchema, InquiryOutSchema,
     QuizListSchema, QuizDetailSchema, QuizSubmissionIn, QuizSubmissionOut,
     AIAssistantInSchema, AIAssistantOutSchema,
-    ArticleListSchema, ArticleDetailSchema
+    ArticleListSchema, ArticleDetailSchema,
+    UploadResponseSchema, ManualUploadInSchema, BatchJSONInSchema
 )
-import os
 from groq import Groq
 
 # In a real app we'd use proper auth. 
@@ -489,6 +491,340 @@ def get_article(request, article_id: int):
     Retrieves full details of a specific theory article.
     """
     return get_object_or_404(Article, id=article_id)
+
+
+# ==============================================================================
+# CONTENT & QUESTION UPLOAD / INGESTION ENDPOINTS
+# ==============================================================================
+
+def helper_get_category(name: Optional[str] = "General CS & AI"):
+    cat_name = name.strip() if name and name.strip() else "General CS & AI"
+    cat, _ = Category.objects.get_or_create(name=cat_name, defaults={"description": f"Category for {cat_name}"})
+    return cat
+
+def helper_ingest_item(content_type: str, item: dict, default_subject: Optional[str] = None):
+    subject_name = item.get("subject_name") or item.get("category") or item.get("subject") or default_subject or "General CS & AI"
+    category = helper_get_category(subject_name)
+
+    if content_type == "pyq":
+        year = item.get("year")
+        try:
+            year = int(year) if year is not None else None
+        except ValueError:
+            year = None
+        
+        pyq = PYQ.objects.create(
+            subject=category,
+            year=year,
+            is_pyq=bool(item.get("is_pyq", True)),
+            question_text=item.get("question_text", "").strip(),
+            answer_text=item.get("answer_text", "").strip(),
+            video_url=item.get("video_url") or None
+        )
+        return f"Created PYQ ID {pyq.id}"
+
+    elif content_type == "question":
+        user = get_current_user()
+        q = Question.objects.create(
+            author=user,
+            category=category,
+            title=item.get("title", "Community Question").strip(),
+            body=item.get("body", item.get("question_text", "")).strip(),
+            video_url=item.get("video_url") or None
+        )
+        tags = item.get("tags", [])
+        if isinstance(tags, str):
+            tags = [t.strip() for t in tags.split(",") if t.strip()]
+        for tag_name in tags:
+            tag_obj, _ = Tag.objects.get_or_create(name=tag_name)
+            q.tags.add(tag_obj)
+        return f"Created Question ID {q.id}"
+
+    elif content_type == "article":
+        art = Article.objects.create(
+            subject=category,
+            title=item.get("title", "Theory Article").strip(),
+            summary=item.get("summary", item.get("content", "")[:150]).strip(),
+            content=item.get("content", "").strip()
+        )
+        return f"Created Article ID {art.id}"
+
+    elif content_type == "lecture":
+        order_val = item.get("order", 0)
+        try:
+            order_val = int(order_val)
+        except ValueError:
+            order_val = 0
+        lec = Lecture.objects.create(
+            category=category,
+            title=item.get("title", "Video Lecture").strip(),
+            description=item.get("description", "").strip(),
+            video_url=item.get("video_url", "https://youtube.com").strip(),
+            order=order_val
+        )
+        return f"Created Lecture ID {lec.id}"
+
+    elif content_type == "quiz":
+        quiz = Quiz.objects.create(
+            category=category,
+            title=item.get("title", "Practice Quiz").strip(),
+            description=item.get("description", "").strip()
+        )
+        q_list = item.get("questions", [])
+        for q_data in q_list:
+            qq = QuizQuestion.objects.create(
+                quiz=quiz,
+                question_text=q_data.get("question_text", "").strip(),
+                explanation=q_data.get("explanation", "").strip()
+            )
+            opts = q_data.get("options", [])
+            for opt_data in opts:
+                if isinstance(opt_data, dict):
+                    QuizOption.objects.create(
+                        question=qq,
+                        option_text=opt_data.get("option_text", "").strip(),
+                        is_correct=bool(opt_data.get("is_correct", False))
+                    )
+                elif isinstance(opt_data, str):
+                    QuizOption.objects.create(
+                        question=qq,
+                        option_text=opt_data.strip(),
+                        is_correct=False
+                    )
+        return f"Created Quiz ID {quiz.id} with {len(q_list)} questions"
+
+    else:
+        raise ValueError(f"Unsupported content_type: {content_type}")
+
+
+@api.get("/upload/stats/", response=dict)
+def get_upload_stats(request):
+    """
+    Returns current counts for all content models in NeuralSpark.
+    """
+    return {
+        "pyqs": PYQ.objects.count(),
+        "questions": Question.objects.count(),
+        "articles": Article.objects.count(),
+        "lectures": Lecture.objects.count(),
+        "quizzes": Quiz.objects.count(),
+        "categories": Category.objects.count()
+    }
+
+
+@api.post("/upload/manual/", response=UploadResponseSchema)
+def upload_manual_content(request, payload: ManualUploadInSchema):
+    """
+    Endpoint for uploading a single structured item manually.
+    """
+    ctype = payload.content_type.lower()
+    details = []
+    try:
+        if ctype == "pyq" and payload.pyq:
+            msg = helper_ingest_item("pyq", payload.pyq.dict())
+        elif ctype == "question" and payload.question:
+            msg = helper_ingest_item("question", payload.question.dict())
+        elif ctype == "article" and payload.article:
+            msg = helper_ingest_item("article", payload.article.dict())
+        elif ctype == "lecture" and payload.lecture:
+            msg = helper_ingest_item("lecture", payload.lecture.dict())
+        elif ctype == "quiz" and payload.quiz:
+            msg = helper_ingest_item("quiz", payload.quiz.dict())
+        else:
+            return UploadResponseSchema(
+                success=False,
+                message=f"Missing payload data for content_type '{ctype}'",
+                items_created=0
+            )
+
+        return UploadResponseSchema(
+            success=True,
+            message=f"Successfully created {ctype.upper()} content.",
+            items_created=1,
+            details=[msg]
+        )
+    except Exception as e:
+        return UploadResponseSchema(
+            success=False,
+            message=f"Error ingesting content: {str(e)}",
+            items_created=0
+        )
+
+
+@api.post("/upload/batch-json/", response=UploadResponseSchema)
+def upload_batch_json(request, payload: BatchJSONInSchema):
+    """
+    Endpoint for uploading a raw JSON string array of items.
+    """
+    ctype = payload.content_type.lower()
+    try:
+        data = json.loads(payload.json_data)
+        if isinstance(data, dict):
+            data = [data]
+        elif not isinstance(data, list):
+            return UploadResponseSchema(success=False, message="JSON must be an object or array of objects")
+
+        created_count = 0
+        details = []
+        for item in data:
+            if isinstance(item, dict):
+                msg = helper_ingest_item(ctype, item)
+                details.append(msg)
+                created_count += 1
+
+        return UploadResponseSchema(
+            success=True,
+            message=f"Successfully ingested {created_count} {ctype.upper()} item(s).",
+            items_created=created_count,
+            details=details
+        )
+    except Exception as e:
+        return UploadResponseSchema(
+            success=False,
+            message=f"JSON ingestion failed: {str(e)}",
+            items_created=0
+        )
+
+
+@api.post("/upload/file/", response=UploadResponseSchema)
+def upload_file_content(
+    request,
+    file: UploadedFile = File(...),
+    content_type: str = Form(...),
+    subject_name: Optional[str] = Form(None)
+):
+    """
+    Multipart file upload endpoint supporting .json, .csv, .md, .txt, and .pdf files.
+    """
+    ctype = content_type.lower().strip()
+    filename = file.name.lower()
+    created_count = 0
+    details = []
+
+    try:
+        # 1. JSON FILE
+        if filename.endswith(".json"):
+            file_text = file.read().decode("utf-8")
+            raw = json.loads(file_text)
+            items = raw if isinstance(raw, list) else [raw]
+            for item in items:
+                if isinstance(item, dict):
+                    msg = helper_ingest_item(ctype, item, default_subject=subject_name)
+                    details.append(msg)
+                    created_count += 1
+
+        # 2. CSV FILE
+        elif filename.endswith(".csv"):
+            file_text = file.read().decode("utf-8")
+            reader = csv.DictReader(io.StringIO(file_text))
+            for row in reader:
+                msg = helper_ingest_item(ctype, dict(row), default_subject=subject_name)
+                details.append(msg)
+                created_count += 1
+
+        # 3. MARKDOWN / TXT FILE
+        elif filename.endswith(".md") or filename.endswith(".txt"):
+            file_text = file.read().decode("utf-8")
+            lines = file_text.strip().split("\n")
+            title = filename.replace(".md", "").replace(".txt", "").replace("_", " ").title()
+            
+            # Extract first heading if present
+            if lines and lines[0].startswith("#"):
+                title = lines[0].lstrip("#").strip()
+                content_body = "\n".join(lines[1:]).strip()
+            else:
+                content_body = file_text
+
+            if ctype == "article":
+                item_dict = {
+                    "title": title,
+                    "summary": content_body[:180].replace("\n", " ") + "...",
+                    "content": content_body,
+                    "subject_name": subject_name or "General CS & AI"
+                }
+            elif ctype == "pyq":
+                item_dict = {
+                    "question_text": content_body,
+                    "answer_text": f"Extracted from {filename}",
+                    "subject_name": subject_name or "General CS & AI"
+                }
+            else:
+                item_dict = {
+                    "title": title,
+                    "body": content_body,
+                    "question_text": content_body,
+                    "content": content_body,
+                    "subject_name": subject_name or "General CS & AI"
+                }
+
+            msg = helper_ingest_item(ctype, item_dict, default_subject=subject_name)
+            details.append(msg)
+            created_count += 1
+
+        # 4. PDF DOCUMENT
+        elif filename.endswith(".pdf"):
+            pdf_bytes = file.read()
+            pdf_reader = PyPDF2.PdfReader(io.BytesIO(pdf_bytes))
+            full_text = ""
+            for i, page in enumerate(pdf_reader.pages):
+                page_text = page.extract_text() or ""
+                if page_text.strip():
+                    full_text += f"\n--- Page {i+1} ---\n" + page_text
+
+            if not full_text.strip():
+                return UploadResponseSchema(
+                    success=False,
+                    message="Could not extract readable text from the provided PDF document.",
+                    items_created=0
+                )
+
+            title = filename.replace(".pdf", "").replace("_", " ").title()
+            if ctype == "article":
+                item_dict = {
+                    "title": title,
+                    "summary": f"Extracted theory document ({len(pdf_reader.pages)} pages).",
+                    "content": full_text.strip(),
+                    "subject_name": subject_name or "General CS & AI"
+                }
+            elif ctype == "pyq":
+                item_dict = {
+                    "question_text": full_text.strip(),
+                    "answer_text": f"Extracted from PDF {filename}",
+                    "subject_name": subject_name or "General CS & AI"
+                }
+            else:
+                item_dict = {
+                    "title": title,
+                    "body": full_text.strip(),
+                    "question_text": full_text.strip(),
+                    "content": full_text.strip(),
+                    "subject_name": subject_name or "General CS & AI"
+                }
+
+            msg = helper_ingest_item(ctype, item_dict, default_subject=subject_name)
+            details.append(msg)
+            created_count += 1
+
+        else:
+            return UploadResponseSchema(
+                success=False,
+                message="Unsupported file format. Please upload .json, .csv, .md, .txt, or .pdf files.",
+                items_created=0
+            )
+
+        return UploadResponseSchema(
+            success=True,
+            message=f"Successfully ingested {created_count} item(s) from '{file.name}'.",
+            items_created=created_count,
+            details=details
+        )
+    except Exception as e:
+        return UploadResponseSchema(
+            success=False,
+            message=f"File upload error: {str(e)}",
+            items_created=0
+        )
+
 
 
 

@@ -99,9 +99,12 @@ export default function Navbar() {
                             </button>
                             
                             {/* Dropdown Menu */}
-                            <div className="absolute right-0 top-full mt-2 w-40 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl shadow-lg p-2 hidden group-hover:block z-50">
+                            <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl shadow-lg p-2 hidden group-hover:block z-50">
                                 <Link href="/dashboard" className="w-full text-left block px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-850 text-xs font-bold text-gray-700 dark:text-gray-300 rounded-lg">
                                     Dashboard
+                                </Link>
+                                <Link href="/upload" className="w-full text-left block px-3 py-2 hover:bg-blue-50 dark:hover:bg-blue-950/30 text-xs font-bold text-blue-600 dark:text-blue-400 rounded-lg">
+                                    Upload & Manage Content
                                 </Link>
                                 <button onClick={logout} className="w-full text-left block px-3 py-2 hover:bg-red-50 dark:hover:bg-red-950/20 text-xs font-bold text-red-650 dark:text-red-450 rounded-lg">
                                     Logout
