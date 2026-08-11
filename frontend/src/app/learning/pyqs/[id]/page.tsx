@@ -83,16 +83,22 @@ export default function PYQDiscussionForum({ params }: { params: Promise<{ id: s
 
     const fetchPYQData = async () => {
         try {
-            const [pyqRes, answersRes, commentsRes] = await Promise.all([
-                api.get(`pyqs/${pyqId}/`),
-                api.get(`pyqs/${pyqId}/answers/`),
-                api.get(`pyqs/${pyqId}/comments/`)
-            ]);
+            const pyqRes = await api.get(`pyqs/${pyqId}/`);
             setPyq(pyqRes.data);
-            setAnswers(answersRes.data);
-            setComments(commentsRes.data);
+
+            try {
+                const [answersRes, commentsRes] = await Promise.all([
+                    api.get(`pyqs/${pyqId}/answers/`),
+                    api.get(`pyqs/${pyqId}/comments/`)
+                ]);
+                setAnswers(answersRes.data || []);
+                setComments(commentsRes.data || []);
+            } catch (subErr) {
+                console.warn("Could not load community answers/comments:", subErr);
+            }
         } catch (error) {
-            console.error("Failed to fetch PYQ data:", error);
+            console.error("Failed to fetch PYQ data (question may not exist):", error);
+            setPyq(null);
         } finally {
             setLoading(false);
         }
