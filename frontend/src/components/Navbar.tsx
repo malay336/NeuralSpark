@@ -59,10 +59,6 @@ export default function Navbar() {
                         <span>PRODUCTS &</span>
                         <span>SERVICES</span>
                     </Link>
-                    <Link href="/dashboard" className="px-3 lg:px-4 py-2 rounded-xl bg-gray-50/60 dark:bg-white/5 border border-gray-150 dark:border-white/5 text-[10px] lg:text-xs font-black tracking-wider text-gray-700 dark:text-gray-200 hover:bg-blue-650 dark:hover:bg-blue-600 hover:text-white dark:hover:text-white hover:border-transparent dark:hover:border-transparent hover:shadow-md transition-all duration-200 active:scale-[0.97] text-center flex flex-col items-center justify-center leading-tight w-28 lg:w-32 h-11">
-                        <span>LIVE</span>
-                        <span>DASHBOARD</span>
-                    </Link>
                     <Link href="/about" className="px-3 lg:px-4 py-2 rounded-xl bg-gray-50/60 dark:bg-white/5 border border-gray-150 dark:border-white/5 text-[10px] lg:text-xs font-black tracking-wider text-gray-700 dark:text-gray-200 hover:bg-blue-650 dark:hover:bg-blue-600 hover:text-white dark:hover:text-white hover:border-transparent dark:hover:border-transparent hover:shadow-md transition-all duration-200 active:scale-[0.97] text-center flex flex-col items-center justify-center leading-tight w-28 lg:w-32 h-11">
                         <span>CONTACT</span>
                         <span>US</span>
