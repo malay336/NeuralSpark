@@ -68,6 +68,10 @@ class PYQ(models.Model):
     video_url = models.URLField(max_length=500, blank=True, null=True, help_text="Optional explanation video")
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        verbose_name = "Practice Question / PYQ"
+        verbose_name_plural = "Practice Questions & PYQs"
+
     def __str__(self):
         if self.is_pyq:
             return f"PYQ {self.year} - {self.subject.name}"
@@ -221,6 +225,10 @@ class Article(models.Model):
     content = models.TextField(help_text="Full text content (Markdown format supported)")
     subject = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='articles')
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Theory Article"
+        verbose_name_plural = "Theory Notes & Articles"
 
     def __str__(self):
         return self.title

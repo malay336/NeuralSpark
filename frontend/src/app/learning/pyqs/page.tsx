@@ -137,19 +137,16 @@ export default function PracticeFeed() {
                       </div>
                    </Link>
 
-                   {/* Card 3: Test Series */}
-                   <div 
-                      onClick={() => alert("GATE Full-Length Mock Test Series is coming soon in August 2026! Stay tuned.")} 
-                      className="group p-5 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl hover:shadow-md hover:border-blue-200 dark:hover:border-blue-900/30 transition-all flex items-start gap-4 cursor-pointer"
-                   >
+                   {/* Card 3: Theory & Study Notes */}
+                   <Link href="/learning/theory" className="group p-5 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl hover:shadow-md hover:border-blue-200 dark:hover:border-blue-900/30 transition-all flex items-start gap-4 cursor-pointer">
                       <div className="p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors shrink-0">
-                         <Sparkles className="w-5 h-5" />
+                         <BookOpen className="w-5 h-5" />
                       </div>
                       <div>
-                         <h3 className="font-bold text-gray-950 dark:text-white text-sm group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">GATE Test Series</h3>
-                         <p className="text-gray-400 text-xs mt-1">Full simulation mock test models.</p>
+                         <h3 className="font-bold text-gray-950 dark:text-white text-sm group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Theory Notes</h3>
+                         <p className="text-gray-400 text-xs mt-1">Deep dive articles & reference guides.</p>
                       </div>
-                   </div>
+                   </Link>
 
                    {/* Card 4: Backend Admin CMS (Create / Edit / Format / Delete) */}
                    <a href="http://127.0.0.1:8000/admin/core/pyq/" target="_blank" rel="noopener noreferrer" className="group p-5 bg-gradient-to-br from-blue-50/80 to-purple-50/80 dark:from-blue-950/20 dark:to-purple-950/20 border border-blue-200/60 dark:border-blue-800/40 rounded-2xl hover:shadow-md hover:border-blue-400 transition-all flex items-start gap-4">
