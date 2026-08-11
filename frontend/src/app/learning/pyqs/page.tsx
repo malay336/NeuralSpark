@@ -151,19 +151,19 @@ export default function PracticeFeed() {
                       </div>
                    </div>
 
-                   {/* Card 4: Upload & Ingest Content (Admin) */}
-                   <Link href="/upload" className="group p-5 bg-gradient-to-br from-blue-50/80 to-purple-50/80 dark:from-blue-950/20 dark:to-purple-950/20 border border-blue-200/60 dark:border-blue-800/40 rounded-2xl hover:shadow-md hover:border-blue-400 transition-all flex items-start gap-4">
+                   {/* Card 4: Backend Admin CMS (Create / Edit / Format / Delete) */}
+                   <a href="http://127.0.0.1:8000/admin/core/pyq/" target="_blank" rel="noopener noreferrer" className="group p-5 bg-gradient-to-br from-blue-50/80 to-purple-50/80 dark:from-blue-950/20 dark:to-purple-950/20 border border-blue-200/60 dark:border-blue-800/40 rounded-2xl hover:shadow-md hover:border-blue-400 transition-all flex items-start gap-4">
                       <div className="p-3 bg-blue-600 text-white rounded-xl group-hover:scale-105 transition-transform shrink-0 shadow-sm">
                          <UploadCloud className="w-5 h-5" />
                       </div>
                       <div>
                          <div className="flex items-center gap-1.5">
-                            <h3 className="font-bold text-gray-950 dark:text-white text-sm group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Upload Content</h3>
+                            <h3 className="font-bold text-gray-950 dark:text-white text-sm group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Admin CMS Portal</h3>
                             <span className="px-1.5 py-0.5 rounded bg-blue-600 text-white text-[9px] font-black uppercase">Admin</span>
                          </div>
-                         <p className="text-gray-500 dark:text-gray-400 text-xs mt-1">Ingest PYQs, articles & PDF sets.</p>
+                         <p className="text-gray-500 dark:text-gray-400 text-xs mt-1">Create, edit, format & delete questions.</p>
                       </div>
-                   </Link>
+                   </a>
                 </div>
 
 

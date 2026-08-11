@@ -14,7 +14,7 @@ from .schemas import (
     QuizListSchema, QuizDetailSchema, QuizSubmissionIn, QuizSubmissionOut,
     AIAssistantInSchema, AIAssistantOutSchema,
     ArticleListSchema, ArticleDetailSchema,
-    UploadResponseSchema, ManualUploadInSchema, BatchJSONInSchema
+    UploadResponseSchema, PYQUploadInSchema, ManualUploadInSchema, BatchJSONInSchema
 )
 from groq import Groq
 
@@ -135,6 +135,59 @@ def get_pyq(request, pyq_id: int):
     Fetches a single Previous Year Question by its ID.
     """
     return get_object_or_404(PYQ, id=pyq_id)
+
+@api.post("/pyqs/", response=PYQSchema)
+def create_pyq(request, payload: PYQUploadInSchema):
+    """
+    Creates a new PYQ / Practice question entry via API.
+    """
+    subject_name = payload.subject_name or "GENERAL APTITUDE"
+    category, _ = Category.objects.get_or_create(name=subject_name)
+    pyq = PYQ.objects.create(
+        subject=category,
+        year=payload.year,
+        is_pyq=payload.is_pyq,
+        question_text=payload.question_text,
+        option_a=payload.option_a,
+        option_b=payload.option_b,
+        option_c=payload.option_c,
+        option_d=payload.option_d,
+        correct_option=(payload.correct_option or "").strip().upper() or None,
+        answer_text=payload.answer_text,
+        video_url=payload.video_url
+    )
+    return pyq
+
+@api.put("/pyqs/{pyq_id}/", response=PYQSchema)
+def update_pyq(request, pyq_id: int, payload: PYQUploadInSchema):
+    """
+    Updates an existing PYQ / Practice question entry by ID.
+    """
+    pyq = get_object_or_404(PYQ, id=pyq_id)
+    if payload.subject_name:
+        category, _ = Category.objects.get_or_create(name=payload.subject_name)
+        pyq.subject = category
+    if payload.year is not None: pyq.year = payload.year
+    pyq.is_pyq = payload.is_pyq
+    pyq.question_text = payload.question_text
+    pyq.option_a = payload.option_a
+    pyq.option_b = payload.option_b
+    pyq.option_c = payload.option_c
+    pyq.option_d = payload.option_d
+    if payload.correct_option: pyq.correct_option = payload.correct_option.strip().upper()
+    if payload.answer_text is not None: pyq.answer_text = payload.answer_text
+    if payload.video_url is not None: pyq.video_url = payload.video_url
+    pyq.save()
+    return pyq
+
+@api.delete("/pyqs/{pyq_id}/", response=dict)
+def delete_pyq(request, pyq_id: int):
+    """
+    Deletes a PYQ / Practice question entry by ID.
+    """
+    pyq = get_object_or_404(PYQ, id=pyq_id)
+    pyq.delete()
+    return {"success": True, "message": f"Deleted PYQ ID {pyq_id}"}
 
 @api.get("/products/", response=List[ProductSchema])
 def list_products(request):
