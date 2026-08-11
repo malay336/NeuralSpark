@@ -37,6 +37,11 @@ export default function UploadPortalPage() {
 
   // PYQ Form Fields
   const [pyqText, setPyqText] = useState("");
+  const [pyqOptA, setPyqOptA] = useState("");
+  const [pyqOptB, setPyqOptB] = useState("");
+  const [pyqOptC, setPyqOptC] = useState("");
+  const [pyqOptD, setPyqOptD] = useState("");
+  const [pyqCorrectOpt, setPyqCorrectOpt] = useState("A");
   const [pyqAnswer, setPyqAnswer] = useState("");
   const [pyqYear, setPyqYear] = useState<number | "">(2024);
   const [pyqVideoUrl, setPyqVideoUrl] = useState("");
@@ -139,6 +144,11 @@ export default function UploadPortalPage() {
     if (manualContentType === "pyq") {
       payload.pyq = {
         question_text: pyqText,
+        option_a: pyqOptA || null,
+        option_b: pyqOptB || null,
+        option_c: pyqOptC || null,
+        option_d: pyqOptD || null,
+        correct_option: pyqCorrectOpt || null,
         answer_text: pyqAnswer,
         year: pyqYear ? Number(pyqYear) : null,
         subject_name: manualSubject,
@@ -235,17 +245,27 @@ export default function UploadPortalPage() {
           [
             {
               question_text: "What is the height of a balanced binary search tree with N nodes?",
-              answer_text: "O(log N)",
-              year: 2023,
+              option_a: "O(N)",
+              option_b: "O(log N)",
+              option_c: "O(N^2)",
+              option_d: "O(1)",
+              correct_option: "B",
+              answer_text: "A balanced BST has a height bounded by O(log N).",
+              year: 2024,
               is_pyq: true,
-              subject_name: "Algorithms & Data Structures"
+              subject_name: "DATA STRUCTURE & ALGORITHM"
             },
             {
               question_text: "Which scheduling algorithm is non-preemptive?",
-              answer_text: "First-Come First-Served (FCFS)",
-              year: 2022,
+              option_a: "Round Robin",
+              option_b: "SRTF",
+              option_c: "FCFS",
+              option_d: "Preemptive Priority",
+              correct_option: "C",
+              answer_text: "First-Come First-Served (FCFS) is non-preemptive.",
+              year: 2023,
               is_pyq: true,
-              subject_name: "Operating Systems"
+              subject_name: "GENERAL APTITUDE"
             }
           ],
           null,
@@ -578,8 +598,72 @@ export default function UploadPortalPage() {
                         className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl p-3 text-sm text-gray-900 dark:text-white focus:outline-none"
                       />
                     </div>
+
+                    {/* MCQ Options A, B, C, D */}
+                    <div className="border border-gray-200 dark:border-gray-800 rounded-2xl p-4 bg-gray-50/50 dark:bg-gray-950/40 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-extrabold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Multiple Choice Options (MCQ)</span>
+                        <div className="flex items-center gap-2">
+                          <label className="text-xs font-bold text-gray-500">Correct Option:</label>
+                          <select
+                            value={pyqCorrectOpt}
+                            onChange={(e) => setPyqCorrectOpt(e.target.value)}
+                            className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg px-2.5 py-1 text-xs font-bold text-blue-600 focus:outline-none"
+                          >
+                            <option value="A">Option A</option>
+                            <option value="B">Option B</option>
+                            <option value="C">Option C</option>
+                            <option value="D">Option D</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-[11px] font-bold text-gray-500 mb-1">Option A</label>
+                          <input
+                            type="text"
+                            value={pyqOptA}
+                            onChange={(e) => setPyqOptA(e.target.value)}
+                            placeholder="Enter Option A..."
+                            className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-2 text-xs font-medium text-gray-900 dark:text-white"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[11px] font-bold text-gray-500 mb-1">Option B</label>
+                          <input
+                            type="text"
+                            value={pyqOptB}
+                            onChange={(e) => setPyqOptB(e.target.value)}
+                            placeholder="Enter Option B..."
+                            className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-2 text-xs font-medium text-gray-900 dark:text-white"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[11px] font-bold text-gray-500 mb-1">Option C</label>
+                          <input
+                            type="text"
+                            value={pyqOptC}
+                            onChange={(e) => setPyqOptC(e.target.value)}
+                            placeholder="Enter Option C..."
+                            className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-2 text-xs font-medium text-gray-900 dark:text-white"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[11px] font-bold text-gray-500 mb-1">Option D</label>
+                          <input
+                            type="text"
+                            value={pyqOptD}
+                            onChange={(e) => setPyqOptD(e.target.value)}
+                            placeholder="Enter Option D..."
+                            className="w-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-2 text-xs font-medium text-gray-900 dark:text-white"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
                     <div>
-                      <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Answer / Explanation Text</label>
+                      <label className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1">Answer & Step-by-Step Explanation</label>
                       <textarea
                         rows={3}
                         value={pyqAnswer}

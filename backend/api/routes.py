@@ -518,6 +518,11 @@ def helper_ingest_item(content_type: str, item: dict, default_subject: Optional[
             year=year,
             is_pyq=bool(item.get("is_pyq", True)),
             question_text=item.get("question_text", "").strip(),
+            option_a=item.get("option_a") or None,
+            option_b=item.get("option_b") or None,
+            option_c=item.get("option_c") or None,
+            option_d=item.get("option_d") or None,
+            correct_option=(item.get("correct_option") or "").strip().upper() or None,
             answer_text=item.get("answer_text", "").strip(),
             video_url=item.get("video_url") or None
         )

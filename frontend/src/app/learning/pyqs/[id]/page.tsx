@@ -24,8 +24,13 @@ type User = {
 
 type PYQ = {
     id: number;
-    year: number;
+    year?: number | null;
     question_text: string;
+    option_a?: string | null;
+    option_b?: string | null;
+    option_c?: string | null;
+    option_d?: string | null;
+    correct_option?: string | null;
     answer_text: string;
     video_url?: string | null;
     created_at: string;
@@ -64,6 +69,11 @@ export default function PYQDiscussionForum({ params }: { params: Promise<{ id: s
     const [submittingAnswer, setSubmittingAnswer] = useState(false);
     const [submittingComment, setSubmittingComment] = useState(false);
     const [showComments, setShowComments] = useState(false);
+
+    // Interactive MCQ State
+    const [selectedOption, setSelectedOption] = useState<string | null>(null);
+    const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+    const [showSolution, setShowSolution] = useState<boolean>(false);
 
     useEffect(() => {
         if (pyqId) {
@@ -203,13 +213,115 @@ export default function PYQDiscussionForum({ params }: { params: Promise<{ id: s
                         </div>
                     </div>
 
+                    {/* Interactive Multiple Choice Options (MCQ) */}
+                    {(pyq.option_a || pyq.option_b || pyq.option_c || pyq.option_d) && (
+                        <div className="mb-8 p-6 rounded-2xl bg-gray-50/70 dark:bg-gray-950/60 border border-gray-200 dark:border-gray-800 space-y-4">
+                            <div className="flex items-center justify-between">
+                                <h3 className="text-xs font-black text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                                    Multiple Choice Options (Select One Answer)
+                                </h3>
+                                {isSubmitted && (
+                                    <span className="text-xs font-bold px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400">
+                                        Answer Submitted
+                                    </span>
+                                )}
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                {[
+                                    { key: "A", label: pyq.option_a },
+                                    { key: "B", label: pyq.option_b },
+                                    { key: "C", label: pyq.option_c },
+                                    { key: "D", label: pyq.option_d },
+                                ].filter(opt => opt.label).map((opt) => {
+                                    const isSelected = selectedOption === opt.key;
+                                    const isCorrect = (pyq.correct_option || "").toUpperCase() === opt.key;
+
+                                    let cardStyle = "bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 text-gray-900 dark:text-white hover:border-blue-400";
+                                    
+                                    if (isSubmitted) {
+                                        if (isCorrect) {
+                                            cardStyle = "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-500 text-emerald-900 dark:text-emerald-300 ring-2 ring-emerald-500/20";
+                                        } else if (isSelected && !isCorrect) {
+                                            cardStyle = "bg-rose-50 dark:bg-rose-950/30 border-rose-500 text-rose-900 dark:text-rose-300";
+                                        } else {
+                                            cardStyle = "bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 opacity-60";
+                                        }
+                                    } else if (isSelected) {
+                                        cardStyle = "bg-blue-50/80 dark:bg-blue-950/40 border-blue-600 text-blue-700 dark:text-blue-300 ring-2 ring-blue-500/20";
+                                    }
+
+                                    return (
+                                        <button
+                                            key={opt.key}
+                                            disabled={isSubmitted}
+                                            onClick={() => setSelectedOption(opt.key)}
+                                            className={`p-4 rounded-xl border text-left transition-all flex items-start gap-3 cursor-pointer ${cardStyle}`}
+                                        >
+                                            <span className={`w-7 h-7 rounded-lg flex items-center justify-center font-extrabold text-xs shrink-0 ${
+                                                isSelected || (isSubmitted && isCorrect) 
+                                                    ? "bg-blue-600 text-white" 
+                                                    : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300"
+                                            }`}>
+                                                {opt.key}
+                                            </span>
+                                            <span className="text-sm font-semibold leading-relaxed pt-0.5">
+                                                {opt.label}
+                                            </span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+
+                            {/* Submit & Result Feedback */}
+                            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+                                {!isSubmitted ? (
+                                    <button
+                                        disabled={!selectedOption}
+                                        onClick={() => {
+                                            setIsSubmitted(true);
+                                            setShowSolution(true);
+                                        }}
+                                        className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-40 text-white font-bold text-xs uppercase tracking-wider shadow-md transition-all cursor-pointer"
+                                    >
+                                        Check Answer
+                                    </button>
+                                ) : (
+                                    <div className="flex items-center gap-3 w-full justify-between">
+                                        <div className="flex items-center gap-2">
+                                            {selectedOption === (pyq.correct_option || "").toUpperCase() ? (
+                                                <div className="flex items-center gap-2 text-emerald-600 font-extrabold text-sm bg-emerald-50 dark:bg-emerald-950/30 px-3 py-1.5 rounded-xl border border-emerald-200 dark:border-emerald-800">
+                                                    <CheckCircle className="w-5 h-5" /> Correct Answer! Great Job 🎉
+                                                </div>
+                                            ) : (
+                                                <div className="flex items-center gap-2 text-rose-600 font-extrabold text-sm bg-rose-50 dark:bg-rose-950/30 px-3 py-1.5 rounded-xl border border-rose-200 dark:border-rose-800">
+                                                    <AlertCircle className="w-5 h-5" /> Incorrect! Correct Option is ({pyq.correct_option})
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <button
+                                            onClick={() => {
+                                                setIsSubmitted(false);
+                                                setSelectedOption(null);
+                                            }}
+                                            className="text-xs font-bold text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 underline"
+                                        >
+                                            Reset Selection
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
                     {/* Official Solution */}
                     <div className="p-6 rounded-2xl bg-green-50/40 dark:bg-green-950/10 border border-green-100/60 dark:border-green-900/20 mb-6">
                         <h3 className="text-xs font-bold text-green-700 dark:text-green-400 uppercase tracking-widest mb-3 flex items-center gap-1.5">
-                            <BookOpen className="w-4 h-4" /> Official Solution
+                            <BookOpen className="w-4 h-4" /> Official Solution & Explanation
                         </h3>
-                        <div className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
-                            {pyq.answer_text || "Solution is being prepared by our educators."}
+                        <div className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap text-sm font-medium">
+                            {pyq.answer_text || "Detailed step-by-step solution is provided by NeuralSpark educators."}
                         </div>
                     </div>
 

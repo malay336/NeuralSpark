@@ -39,6 +39,11 @@ OFFICIAL_SUBJECTS = [
                 "year": 2024,
                 "is_pyq": True,
                 "question_text": "Let A be a 3x3 matrix with eigenvalues lambda_1 = 1, lambda_2 = 2, and lambda_3 = -3. Find the determinant of matrix A^2 + 2I.",
+                "option_a": "198",
+                "option_b": "108",
+                "option_c": "64",
+                "option_d": "32",
+                "correct_option": "A",
                 "answer_text": "Eigenvalues of A^2 + 2I are 1^2+2=3, 2^2+2=6, (-3)^2+2=11. Product = 3 * 6 * 11 = 198."
             }
         ],
@@ -427,6 +432,11 @@ def seed_all():
                 year=q.get("year"),
                 is_pyq=q.get("is_pyq", True),
                 question_text=q["question_text"],
+                option_a=q.get("option_a", "Option A"),
+                option_b=q.get("option_b", "Option B"),
+                option_c=q.get("option_c", "Option C"),
+                option_d=q.get("option_d", "Option D"),
+                correct_option=q.get("correct_option", "A"),
                 answer_text=q["answer_text"]
             )
 

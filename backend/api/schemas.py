@@ -24,7 +24,7 @@ class PYQSchema(ModelSchema):
     subject: CategorySchema
     class Meta:
         model = PYQ
-        fields = ['id', 'year', 'is_pyq', 'question_text', 'answer_text', 'video_url', 'created_at']
+        fields = ['id', 'year', 'is_pyq', 'question_text', 'option_a', 'option_b', 'option_c', 'option_d', 'correct_option', 'answer_text', 'video_url', 'created_at']
 
 
 class ProductSchema(ModelSchema):
@@ -201,6 +201,11 @@ class UploadResponseSchema(Schema):
 
 class PYQUploadInSchema(Schema):
     question_text: str
+    option_a: Optional[str] = None
+    option_b: Optional[str] = None
+    option_c: Optional[str] = None
+    option_d: Optional[str] = None
+    correct_option: Optional[str] = None
     answer_text: Optional[str] = ""
     year: Optional[int] = None
     is_pyq: bool = True
