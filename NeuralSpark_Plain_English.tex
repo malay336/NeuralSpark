@@ -176,6 +176,25 @@ To meet full academic and university publishing standards, the initial 34-page d
 \end{center}
 
 % =============================================================================
+% 6. UNDERSTANDING THE SYSTEM FLOWCHARTS
+% =============================================================================
+\section{Understanding the System Flowcharts (Visual Pipeline)}
+The accompanying flowchart document (\texttt{NeuralSpark\_Flowchart.pdf}) maps out two core diagrams:
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Flowchart 1: Multimodal Handwritten Ingestion \& AI Grading Pipeline}
+    \begin{itemize}
+        \item \textit{Step 1 (Ingestion):} When a student uploads a scanned handwritten PDF or camera photo, the backend parses both digital text (\texttt{PyPDF2}) and extracts embedded bitmap pages (\texttt{page.images}), converting them into Base64 visual payloads.
+        \item \textit{Step 2 (Routing):} If the user selects Cloud Vision Mode, the image is passed to the multimodal Vision-LLM alongside the strict grading rubric. If Offline Mode is chosen, text is routed to the local CPU Transformer.
+        \item \textit{Step 3 (Evaluation):} The AI produces an itemized deduction report (\texttt{Score: X/Y} + justifications) and streams it directly to the Next.js frontend with animated score reveals.
+    \end{itemize}
+    \item \textbf{Flowchart 2: Full-Stack Learning System Lifecycle \& Offline Suite}
+    \begin{itemize}
+        \item Connects the Next.js 16 App Router UI $\leftrightarrow$ Django 6 Ninja async API gateway $\leftrightarrow$ SQLite/PostgreSQL relational database $\leftrightarrow$ Offline Vosk/Piper voice engines on a local Wi-Fi LAN.
+    \end{itemize}
+\end{enumerate}
+
+% =============================================================================
 % 6. THE TECH STACK MADE SIMPLE
 % =============================================================================
 \section{The Tech Stack Explained (Why We Chose Each Tool)}
