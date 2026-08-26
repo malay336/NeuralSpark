@@ -1,0 +1,23 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{mathptmx}
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+
+\begin{document}
+\begin{center}
+    {\large\bfseries Data Structures \& Algorithms --- Weekly Assessment}\\[0.2cm]
+    \textbf{Student ID:} 2303031241262
+\end{center}
+\hrule
+\vspace{0.4cm}
+
+\noindent\textbf{Question:}\\
+Explain the working principle and derive the exact time complexity of Binary Search.
+
+\vspace{0.3cm}
+\noindent\textbf{Student Answer:}\\
+Binary search works by looking at every element in an array sequentially until it finds the key.
+Because it checks each element from index 0 to $n-1$, the recurrence is $T(n) = T(n-1) + 1$, which solves to $O(n)$ in all cases.
+It can be applied directly on any unsorted list without preprocessing.
+\end{document}

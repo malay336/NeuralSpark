@@ -1,0 +1,43 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{mathptmx}
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+\usepackage{amsmath,amssymb}
+
+\definecolor{navy}{RGB}{30, 64, 175}
+
+\begin{document}
+\begin{center}
+    {\large\bfseries\textcolor{navy}{Machine Learning \& Neural Networks Assignment}}\\[0.2cm]
+    \textbf{Topic: Logistic Regression \& Backpropagation Gradients} \quad $\mid$ \quad \textbf{Student ID:} 2303031240866
+\end{center}
+\hrule
+\vspace{0.4cm}
+
+\noindent\textbf{Problem Statement:}\\
+Given the Binary Cross-Entropy (BCE) loss $\mathcal{L}(y, \hat{y}) = -\left[y \ln \hat{y} + (1-y)\ln(1-\hat{y})\right]$ where $\hat{y} = \sigma(z) = \frac{1}{1 + e^{-z}}$, prove that the gradient with respect to logit $z$ simplifies to $\frac{\partial \mathcal{L}}{\partial z} = \hat{y} - y$.
+
+\vspace{0.3cm}
+\noindent\textbf{Student Solution Derivation:}\\
+\textbf{Step 1: Derivative of the Sigmoid Activation Function}\\
+The sigmoid function is $\sigma(z) = (1 + e^{-z})^{-1}$. Differentiating with respect to $z$:
+\[
+\frac{d\hat{y}}{dz} = \frac{d\sigma(z)}{dz} = -(1 + e^{-z})^{-2} (-e^{-z}) = \frac{1}{1 + e^{-z}} \cdot \frac{e^{-z}}{1 + e^{-z}} = \hat{y}(1 - \hat{y})
+\]
+
+\vspace{0.2cm}
+\noindent\textbf{Step 2: Derivative of BCE Loss with respect to Prediction $\hat{y}$}\\
+Differentiating $\mathcal{L} = -y \ln \hat{y} - (1-y)\ln(1-\hat{y})$:
+\[
+\frac{\partial \mathcal{L}}{\partial \hat{y}} = -\frac{y}{\hat{y}} - \frac{1-y}{1-\hat{y}}(-1) = -\frac{y}{\hat{y}} + \frac{1-y}{1-\hat{y}} = \frac{-y(1-\hat{y}) + \hat{y}(1-y)}{\hat{y}(1-\hat{y})} = \frac{\hat{y} - y}{\hat{y}(1-\hat{y})}
+\]
+
+\vspace{0.2cm}
+\noindent\textbf{Step 3: Chain Rule Application}\\
+Applying the chain rule $\frac{\partial \mathcal{L}}{\partial z} = \frac{\partial \mathcal{L}}{\partial \hat{y}} \cdot \frac{\partial \hat{y}}{\partial z}$:
+\[
+\frac{\partial \mathcal{L}}{\partial z} = \left(\frac{\hat{y} - y}{\hat{y}(1-\hat{y})}\right) \cdot \left(\hat{y}(1 - \hat{y})\right) = \hat{y} - y
+\]
+\textbf{Conclusion:} The gradient simplifies directly to $\hat{y} - y$ (Prediction Residual). [Q.E.D.]
+\end{document}

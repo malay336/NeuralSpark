@@ -1,0 +1,59 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{mathptmx}
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+\usepackage{amsmath,amssymb}
+
+\definecolor{navy}{RGB}{30, 64, 175}
+
+\begin{document}
+\begin{center}
+    {\large\bfseries\textcolor{navy}{GATE CS/DA Assignment Submission: Algorithms \& Complexity}}\\[0.2cm]
+    \textbf{Student ID:} 2303031240687 \quad $\mid$ \quad \textbf{Subject Code:} 203105400
+\end{center}
+\hrule
+\vspace{0.4cm}
+
+\noindent\textbf{Problem Statement:}\\
+State the Master Theorem formulation and derive the asymptotic tight bound for the divide-and-conquer recurrence relation:
+\[
+T(n) = 2T\left(\frac{n}{2}\right) + \Theta(n), \quad \text{with } T(1) = \Theta(1)
+\]
+
+\vspace{0.3cm}
+\noindent\textbf{Student Solution Derivation:}\\
+\textbf{Step 1: Standard Master Theorem Form}\\
+The standard divide-and-conquer recurrence is represented as:
+\[
+T(n) = aT\left(\frac{n}{b}\right) + f(n)
+\]
+where $a \ge 1$ represents the number of recursive subproblems, $b > 1$ represents the subproblem size reduction factor, and $f(n)$ is the non-recursive recombination work.
+
+\vspace{0.2cm}
+\noindent\textbf{Step 2: Parameter Extraction \& Critical Exponent Calculation}\\
+From the given recurrence $T(n) = 2T(n/2) + \Theta(n)$:
+\[
+a = 2, \quad b = 2, \quad f(n) = \Theta(n)
+\]
+We evaluate the critical exponent value $\log_b a$:
+\[
+c_{\text{crit}} = \log_b a = \log_2 2 = 1 \implies n^{\log_b a} = n^1 = n
+\]
+
+\vspace{0.2cm}
+\noindent\textbf{Step 3: Case Identification}\\
+We compare $f(n)$ with $n^{\log_b a}$:
+\[
+f(n) = \Theta(n) = \Theta\left(n^{\log_b a}\right)
+\]
+Since $f(n) = \Theta(n^{\log_b a})$, this problem strictly satisfies \textbf{Case 2} of the Master Theorem with $k = 0$.
+
+\vspace{0.2cm}
+\noindent\textbf{Step 4: Asymptotic Tight Bound Conclusion}\\
+According to Case 2 of the Master Theorem:
+\[
+T(n) = \Theta\left(n^{\log_b a} \log^{k+1} n\right) = \Theta(n \log n)
+\]
+\textbf{Final Answer:} The recurrence has a tight complexity of $\Theta(n \log n)$ (as observed in MergeSort).
+\end{document}
