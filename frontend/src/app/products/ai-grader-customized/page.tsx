@@ -41,15 +41,12 @@ export default function CustomizedAIGraderPage() {
             if (rubricFile) formData.append("rubric_file", rubricFile);
             if (studentAnswerFile) formData.append("student_answer_file", studentAnswerFile);
 
-            const { data } = await api.post("/products/ai-grader-customized", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            });
+            const { data } = await api.post("products/ai-grader-customized/", formData);
             setEvaluation(data.evaluation);
-        } catch (error) {
-            console.error(error);
-            setEvaluation("An error occurred while grading. Please check the backend connection.");
+        } catch (error: any) {
+            console.error("Custom Grader Error:", error);
+            const serverMsg = error.response?.data?.error || error.response?.data?.message || error.message;
+            setEvaluation(`An error occurred while grading: ${serverMsg}. Please ensure the backend server is running.`);
         } finally {
             setLoading(false);
         }
