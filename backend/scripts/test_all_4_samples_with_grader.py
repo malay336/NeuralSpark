@@ -46,10 +46,12 @@ def submit_sample_to_grader(sample_name, pdf_path, question_text, rubric_text):
         return False, str(e)
 
 def run_sample_suite():
+    sample_dir = os.path.join(os.path.dirname(__file__), "..", "..", "sample_pdfs")
+    
     # Sample 1: Handwritten Scanned PDF (Eigenvalues)
     submit_sample_to_grader(
         "Sample 1: Handwritten Scanned PDF (Matrix Eigenvalues)",
-        "Sample_Handwritten_Eigenvalues_Answer.pdf",
+        os.path.join(sample_dir, "Sample_Handwritten_Eigenvalues_Answer.pdf"),
         "Find the eigenvalues of 2x2 matrix A = [[4, 1], [2, 3]].",
         "Max 5 Marks: 2 marks for characteristic equation det(A - lambda*I) = 0; 2 marks for polynomial lambda^2 - 7lambda + 10 = 0; 1 mark for correct eigenvalues lambda in {5, 2}."
     )
@@ -57,7 +59,7 @@ def run_sample_suite():
     # Sample 2: Master Theorem Derivation (Perfect Answer)
     submit_sample_to_grader(
         "Sample 2: Master Theorem Recurrence Proof (Perfect Score)",
-        "Sample_Master_Theorem_Derivation.pdf",
+        os.path.join(sample_dir, "Sample_Master_Theorem_Derivation.pdf"),
         "State Master Theorem formulation and derive the tight bound for T(n) = 2T(n/2) + Theta(n).",
         "Max 5 Marks: 2 marks for stating standard Master Theorem form; 2 marks for computing critical exponent log_b(a) = 1; 1 mark for Theta(n log n) by Case 2."
     )
@@ -65,7 +67,7 @@ def run_sample_suite():
     # Sample 3: Flawed Binary Search Answer (Deduction Test)
     submit_sample_to_grader(
         "Sample 3: Flawed Binary Search Answer (Point Deductions Test)",
-        "Sample_Flawed_BinarySearch_Answer.pdf",
+        os.path.join(sample_dir, "Sample_Flawed_BinarySearch_Answer.pdf"),
         "Explain the working principle and derive the exact time complexity of Binary Search.",
         "Max 5 Marks: 2 marks for stating O(log n); 2 marks for explaining halving search space at each comparison; 1 mark for sorted input requirement."
     )
@@ -73,7 +75,7 @@ def run_sample_suite():
     # Sample 4: ML Binary Cross-Entropy Derivative (Math Proof)
     submit_sample_to_grader(
         "Sample 4: Machine Learning Binary Cross-Entropy Gradient Derivation",
-        "Sample_ML_BinaryCrossEntropy_Answer.pdf",
+        os.path.join(sample_dir, "Sample_ML_BinaryCrossEntropy_Answer.pdf"),
         "Prove that the derivative of Binary Cross-Entropy loss with respect to logit z is y_hat - y.",
         "Max 5 Marks: 2 marks for sigmoid derivative d(y_hat)/dz = y_hat(1-y_hat); 2 marks for dL/d(y_hat) = (y_hat-y)/(y_hat(1-y_hat)); 1 mark for chain rule simplification to y_hat - y."
     )
