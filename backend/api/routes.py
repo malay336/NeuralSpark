@@ -304,18 +304,26 @@ def ai_grader_endpoint(
     if not user_content:
         return {"evaluation": "No question, rubric, or answer provided."}
 
-    try:
-        completion = client.chat.completions.create(
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_content}
-            ],
-            model="meta-llama/llama-4-scout-17b-16e-instruct",
-            temperature=0.1,
-        )
-        return {"evaluation": completion.choices[0].message.content}
-    except Exception as e:
-        return {"evaluation": f"Error during grading: {str(e)}"}
+    active_model = os.environ.get("GROQ_GRADER_MODEL", "openai/gpt-oss-120b")
+    fallback_models = [active_model, "openai/gpt-oss-20b", "qwen/qwen3.6-27b", "groq/compound"]
+    
+    last_error = None
+    for model_id in fallback_models:
+        try:
+            completion = client.chat.completions.create(
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_content}
+                ],
+                model=model_id,
+                temperature=0.1,
+            )
+            return {"evaluation": completion.choices[0].message.content}
+        except Exception as e:
+            last_error = e
+            continue
+            
+    return {"evaluation": f"Error during grading: {str(last_error)}"}
 
 import json
 from pathlib import Path
@@ -330,9 +338,10 @@ def get_custom_grader_pipeline():
         try:
             from transformers import pipeline, AutoModelForSequenceClassification, AutoTokenizer
             import torch
-            model_path = Path(__file__).resolve().parent.parent.parent / "ai_grader_model_customized"
-            tokenizer = AutoTokenizer.from_pretrained(model_path)
-            model = AutoModelForSequenceClassification.from_pretrained(model_path, num_labels=1)
+            model_path = (Path(__file__).resolve().parent.parent.parent / "ai_grader_model_customized").resolve()
+            model_str = str(model_path)
+            tokenizer = AutoTokenizer.from_pretrained(model_str)
+            model = AutoModelForSequenceClassification.from_pretrained(model_str, num_labels=1)
             custom_grader_pipeline = pipeline("text-classification", model=model, tokenizer=tokenizer, device="cpu")
         except Exception as e:
             print(f"Failed to load custom model: {e}")
@@ -513,18 +522,26 @@ def ask_ai_assistant(request, payload: AIAssistantInSchema):
         "Keep the tone encouraging, academic, and highly educational."
     )
     
-    try:
-        completion = client.chat.completions.create(
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": payload.question}
-            ],
-            model="meta-llama/llama-4-scout-17b-16e-instruct",
-            temperature=0.3,
-        )
-        return {"response": completion.choices[0].message.content}
-    except Exception as e:
-        return {"response": f"AI Assistant Error: {str(e)}. Please check backend configuration."}
+    active_model = os.environ.get("GROQ_TUTOR_MODEL", "openai/gpt-oss-120b")
+    fallback_models = [active_model, "openai/gpt-oss-20b", "qwen/qwen3.6-27b", "groq/compound"]
+    
+    last_error = None
+    for model_id in fallback_models:
+        try:
+            completion = client.chat.completions.create(
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": payload.question}
+                ],
+                model=model_id,
+                temperature=0.3,
+            )
+            return {"response": completion.choices[0].message.content}
+        except Exception as e:
+            last_error = e
+            continue
+            
+    return {"response": f"AI Assistant Error: {str(last_error)}. Please check backend configuration."}
 
 
 @api.get("/articles/", response=List[ArticleListSchema])
