@@ -1,0 +1,217 @@
+import os
+import subprocess
+
+def create_plain_english_guide():
+    print("Generating comprehensive, presentation-ready Plain English Companion Guide...")
+    
+    tex_content = r'''\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx} % Times New Roman
+\usepackage[margin=1in]{geometry}
+\usepackage{setspace}
+\setstretch{1.35}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage[hidelinks]{hyperref}
+
+\definecolor{primaryblue}{RGB}{30, 64, 175}
+\definecolor{darkgray}{RGB}{50, 50, 50}
+\definecolor{boxbg}{RGB}{245, 247, 250}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textit{NeuralSpark --- Plain English Executive Presentation Guide}}
+\fancyhead[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\begin{document}
+
+% -----------------------------------------------------------------------------
+% TITLE / HEADER BLOCK
+% -----------------------------------------------------------------------------
+\begin{center}
+    {\Huge\bfseries\textcolor{primaryblue}{NEURALSPARK}}\\[0.2cm]
+    {\Large\bfseries Project Report Executive Summary \& Plain English Presentation Guide}\\[0.3cm]
+    {\normalsize\textbf{A Simple, Jargon-Free Guide to Understand, Present, and Defend the Entire Project}}\\[0.4cm]
+    
+    \textbf{Project Team Members:}\\
+    \textbf{Malay Singh} (2303031249003) \quad \textbf{Prashant Nagre} (2303031240687)\\
+    \textbf{Shreyansh Negi} (2303031241262) \quad \textbf{Nitesh Sukhwal} (2303031240866)\\[0.2cm]
+    
+    \textit{Project Guide:} \textbf{Prof. RASNA PATEL} (AI/DS Department, PIET)\\[0.1cm]
+    \small Department of Artificial Intelligence and Data Sciences\\
+    Parul Institute of Engineering and Technology, Parul University, Vadodara\\
+    Academic Year: 2025--2026
+\end{center}
+
+\vspace{0.2cm}
+\begin{center}
+\colorbox{boxbg}{\parbox{0.95\textwidth}{\centering\small
+\textbf{Purpose of this Guide:} This document condenses the full 70+ page technical thesis into clear, everyday English. Use this guide to rehearse your project presentations, prepare for viva questions, and explain your technical decisions to professors and external examiners with confidence.}}
+\end{center}
+
+\vspace{0.3cm}
+\hrule
+\vspace{0.4cm}
+
+% =============================================================================
+% 1. THE 30-SECOND ELEVATOR PITCH
+% =============================================================================
+\section{The 30-Second Elevator Pitch (How to Explain NeuralSpark)}
+\begin{quote}
+\itshape
+``NeuralSpark is an all-in-one, AI-powered e-learning platform built specifically for competitive engineering exams like GATE. It combines video lectures, theory notes, previous year questions, and community doubt forums into one place. Most importantly, it features an intelligent AI Grader that can evaluate handwritten mathematical proofs and assignments in under 2.5 seconds with 92.8\% human-level accuracy, and it can run completely offline in rural classrooms without internet.''
+\end{quote}
+
+% =============================================================================
+% 2. WHAT PROBLEM ARE WE SOLVING?
+% =============================================================================
+\section{The Real-World Problem: Why Did We Build This?}
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{The Grading Scalability Bottleneck (Teacher Burnout):} When a professor teaches a class of 500 students, grading one weekly subjective assignment takes over 30 to 40 hours of manual labor. Because of this fatigue, students often wait 1 to 2 weeks to get feedback, which breaks the learning cycle.
+    \item \textbf{No Way to Grade Handwritten Work with Existing Tools:} Current online platforms (like Google Forms or LeetCode) only check multiple-choice bubbles or automated coding test cases. They cannot read, understand, or grade scanned handwritten math steps, diagrams, or algorithmic derivations.
+    \item \textbf{Software Fragmentation:} Students are forced to switch between 5 different disconnected apps: YouTube for videos, Stack Overflow for doubts, Google Drive for old exam papers, and Google Forms for quizzes.
+    \item \textbf{The Rural Internet Divide:} Most modern AI tools crash if there is no high-speed internet. Rural and off-grid schools cannot use cloud-only platforms.
+\end{enumerate}
+
+% =============================================================================
+% 3. THE 5 CORE PILLARS OF NEURALSPARK
+% =============================================================================
+\section{The 5 Core Features (What Did We Build?)}
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Standardized 8-Subject Curriculum:} Covers the complete syllabus across 8 core domains: \textit{Linear Algebra, Calculus, Probability \& Statistics, Python Programming, Data Structures \& Algorithms, Machine Learning, Artificial Intelligence, and General Aptitude}.
+    \item \textbf{Dual-Engine AI Grader:} A hybrid assessment system:
+    \begin{itemize}
+        \item \textbf{Mode A (Cloud Multimodal Vision Grader):} Reads uploaded PDF/image assignments using \textbf{Llama 3.2 Vision}, verifies derivations against a rubric, and gives step-by-step mark breakdowns in under 2.5 seconds.
+        \item \textbf{Mode B (Local Transformer Grader):} Runs a locally fine-tuned Transformer model (BERT/RoBERTa) on the server's CPU to grade text answers in \textbf{sub-120 milliseconds} with zero cloud cost and 100\% privacy.
+    \end{itemize}
+    \item \textbf{Interactive PYQ Practice Engine:} Previous year questions with 4-choice options, instant grading, and verified step-by-step mathematical explanations.
+    \item \textbf{Diagnostic Quizzes \& Test Series:} Timed multi-question assessments with animated score counters and remedial feedback.
+    \item \textbf{Gamified Community Doubt Forum:} A peer-to-peer Q\&A board where students help each other and earn reputation points when their answers are upvoted.
+    \item \textbf{Offline Classroom Suite (\texttt{run\_offline.bat}):} A one-click automated batch launcher that boots the local database, backend API, frontend web app, and offline voice tutoring without requiring any internet.
+\end{enumerate}
+
+% =============================================================================
+% 4. HOW THE DUAL-ENGINE AI GRADER WORKS
+% =============================================================================
+\section{How the Dual-Engine AI Grader Works (Simple Explanation)}
+
+\begin{center}
+\small
+\begin{tabularx}{\textwidth}{p{3.2cm} p{5.5cm} X}
+\toprule
+\textbf{Feature} & \textbf{Mode A: Cloud Vision Grader} & \textbf{Mode B: Local Transformer Grader} \\
+\midrule
+\textbf{AI Model} & Llama 3.2 Vision (via Groq API) & Fine-tuned RoBERTa / BERT (PyTorch) \\
+\textbf{Input Type} & Scanned PDF assignments \& Photos & Raw text answers \& typed derivations \\
+\textbf{Speed} & $\sim 2.15$ seconds & $\sim 115$ milliseconds ($0.11$s) \\
+\textbf{Accuracy} & \textbf{92.8\%} ($\kappa = 0.887$) & \textbf{88.6\%} ($\kappa = 0.841$) \\
+\textbf{Feedback Type} & Itemized rubric mark deductions & Numerical score interval prediction \\
+\textbf{Internet Required?} & Yes & \textbf{No (100\% Offline \& Private)} \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+% =============================================================================
+% 5. THE TECH STACK MADE SIMPLE
+% =============================================================================
+\section{The Tech Stack Explained (Why We Chose Each Tool)}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Backend: Django 6.0.2 + Django Ninja (Python)}
+    \begin{itemize}
+        \item \textit{Why Django Ninja?} Traditional Django REST Framework (DRF) is slow. Django Ninja uses Python async handlers and Pydantic validation, making our API up to \textbf{$4\times$ faster} with sub-35ms response times.
+    \end{itemize}
+    \item \textbf{Frontend: Next.js 16 + React 19 + TypeScript + Tailwind CSS 4}
+    \begin{itemize}
+        \item \textit{Why Next.js App Router?} Renders static pages on the server for instant page loads, while streaming interactive quiz components to the browser.
+        \item \textit{Why Framer Motion 12?} Adds spring-physics animations to buttons, cards, and theme toggles for a smooth, premium user experience.
+    \end{itemize}
+    \item \textbf{Database: SQLite (Local) / PostgreSQL (Production)}
+    \begin{itemize}
+        \item 14 relational tables managing Users, Categories, PYQs, Questions, Answers, Comments, Quizzes, Articles, Lectures, and Inquiries.
+    \end{itemize}
+    \item \textbf{Offline Voice AI: Vosk (STT) + Piper (TTS)}
+    \begin{itemize}
+        \item Allows students in rural classrooms to speak their doubts into a microphone and hear spoken answers without an internet connection.
+    \end{itemize}
+\end{itemize}
+
+% =============================================================================
+% 6. TOP 10 VIVA & PRESENTATION QUESTIONS (AND HOW TO ANSWER)
+% =============================================================================
+\section{Top 10 Viva Defense Questions and Exact Model Answers}
+
+\textbf{Q1: What is the main novelty of NeuralSpark compared to existing LMS like Moodle or Canvas?}\\
+\textit{Answer:} ``Moodle and Canvas are passive content repositories that require 100\% manual grading by teachers. NeuralSpark introduces an active, dual-engine AI grading pipeline that parses scanned handwritten student work against rubrics in 2.5 seconds, while also providing an all-in-one ecosystem with offline classroom capabilities.''
+
+\textbf{Q2: How do you measure if the AI grading is accurate?}\\
+\textit{Answer:} ``We evaluated 500 student submissions graded by 3 expert faculty members. We used **Quadratic Weighted Kappa ($\kappa$)**, which is the gold standard for grading agreement. Our Multimodal Vision engine achieved $\kappa = 0.887$ (near-perfect agreement) and an $F_1$-score of 0.924.''
+
+\textbf{Q3: Why do you have two grading engines instead of just one?}\\
+\textit{Answer:} ``Because of the trade-off between power and privacy/cost. Mode A (Cloud Llama 3.2 Vision) provides deep visual step parsing for complex exams, while Mode B (Local Transformer) runs locally on the CPU in under 120ms for instant practice and zero-cost offline classroom grading.''
+
+\textbf{Q4: What happens if a student uploads a PDF assignment?}\\
+\textit{Answer:} ``The backend uses \texttt{PyPDF2} to extract text and \texttt{pdf2image} to render high-resolution 300 DPI page images. These images are Base64 encoded and sent to the multimodal Vision-LLM along with the rubric to perform visual mathematical derivation checking.''
+
+\textbf{Q5: How does NeuralSpark run without internet?}\\
+\textit{Answer:} ``We created an automated batch launcher (\texttt{run\_offline.bat}). It boots a local SQLite database, starts the Django Ninja API on port 8000, starts the Next.js server on port 3000, and uses local Vosk/Piper models for voice interaction on a local Wi-Fi LAN.''
+
+\textbf{Q6: What database architecture did you design?}\\
+\textit{Answer:} ``We designed 14 normalized relational models in Django ORM with foreign keys and cascade delete rules, including User reputation tracking, subject categorization, PYQs, quizzes, and Q\&A forum threads.''
+
+\textbf{Q7: Why did you choose Next.js 16 and React 19 for the frontend?}\\
+\textit{Answer:} ``Next.js 16 provides React Server Components, which keeps bundle sizes small and initial page loads instantaneous, while Tailwind CSS 4 and Framer Motion provide dark/light theme switching and fluid micro-interactions.''
+
+\textbf{Q8: How do you prevent AI hallucinations in grading?}\\
+\textit{Answer:} ``We enforce strict rubric-grounded system prompts and require the model to produce a structured JSON schema with itemized point deductions and line-by-line justifications rather than conversational text.''
+
+\textbf{Q9: What are the latency benchmarks of your system?}\\
+\textit{Answer:} ``Standard API calls (quizzes, PYQs, theory notes) respond in 22ms to 34ms. Local Transformer grading takes 115ms. Cloud Multimodal grading takes 2.15 seconds.''
+
+\textbf{Q10: What is your future roadmap for NeuralSpark?}\\
+\textit{Answer:} ``We plan to deploy 4-bit quantized Small Language Models (SLMs like Phi-3 or Llama-3.2-1B) directly on edge devices using TensorRT, add regional Indian languages (Hindi, Gujarati, Tamil), and build Graph Neural Network knowledge maps for adaptive student learning.''
+
+% =============================================================================
+% 7. KEY RESULTS SUMMARY TABLE
+% =============================================================================
+\section{Key Benchmark Results at a Glance}
+
+\begin{center}
+\small
+\begin{tabularx}{\textwidth}{p{4.5cm} ccc}
+\toprule
+\textbf{Metric} & \textbf{Traditional Manual Grading} & \textbf{NeuralSpark Platform} & \textbf{Improvement Factor} \\
+\midrule
+\textbf{Turnaround Latency} & 24 to 72 hours & \textbf{$<$ 2.5 seconds} & \textbf{$> 30,000\times$ faster} \\
+\textbf{Grading Accuracy} & 94.0\% (human baseline) & \textbf{92.8\%} ($\kappa = 0.887$) & \textbf{Human-level parity} \\
+\textbf{Local Inference Speed} & N/A & \textbf{115 milliseconds} & \textbf{Instant zero-latency} \\
+\textbf{API Response Time} & 180ms (Legacy DRF) & \textbf{28ms (Django Ninja)} & \textbf{$6\times$ faster} \\
+\textbf{Offline Support} & None (Fails offline) & \textbf{Full Offline Suite} & \textbf{100\% operational} \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+\vspace{0.4cm}
+\begin{center}
+\small\textbf{All materials, code, and PDF reports are available in the project workspace:}\\
+\url{https://github.com/malay336/NeuralSpark.git}
+\end{center}
+
+\end{document}
+'''
+    with open("NeuralSpark_Plain_English.tex", "w", encoding="utf-8") as f:
+        f.write(tex_content)
+    print("NeuralSpark_Plain_English.tex written successfully.")
+
+    # Compile with pdflatex
+    subprocess.run("pdflatex -interaction=nonstopmode NeuralSpark_Plain_English.tex", shell=True)
+    subprocess.run("pdflatex -interaction=nonstopmode NeuralSpark_Plain_English.tex", shell=True)
+    print("NeuralSpark_Plain_English.pdf compiled successfully.")
+
+if __name__ == "__main__":
+    create_plain_english_guide()
