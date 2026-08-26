@@ -37,15 +37,60 @@ The Raspberry Pi 4 Model B represents the primary edge deployment target for Neu
     \item \textbf{GPIO Header:} Standard 40-pin GPIO header supporting UART, I2C, SPI, and PWM hardware buses.
 \end{itemize}
 
-\subsubsection{Local Wi-Fi Access Point (AP) Configuration}
-In an off-grid rural classroom without an external internet router, the Raspberry Pi edge server is configured as a standalone wireless Access Point using \texttt{hostapd} and \texttt{dnsmasq}. The edge server broadcasts a local Wi-Fi SSID (e.g., \texttt{NeuralSpark-Classroom}). Up to 35 student client laptops, tablets, or smartphones can connect directly to the local LAN, accessing the full NeuralSpark web platform at \texttt{http://neuralspark.local:3000} with zero internet bandwidth consumption.
+\subsubsection{Microcontroller Comparison: Arduino Uno vs NodeMCU ESP8266 vs ESP32}
+Table~\ref{tab:mcu_detailed_comparison} provides an in-depth comparative analysis of edge microcontrollers evaluated for peripheral classroom hardware interfaces.
 
-\subsection{Workstation and Cloud Server Hardware}
-For cloud deployment and high-throughput multi-user institutional environments:
+\begin{table}[H]
+\centering
+\caption{Comprehensive Comparison of Embedded Microcontrollers for Educational IoT Hardware}
+\label{tab:mcu_detailed_comparison}
+\small
+\begin{tabularx}{\textwidth}{p{3.2cm} p{3.0cm} p{3.2cm} X}
+\toprule
+\textbf{Feature Dimension} & \textbf{Arduino Uno R3} & \textbf{NodeMCU ESP8266} & \textbf{ESP32 DevKit V1} \\
+\midrule
+\textbf{Microcontroller} & ATmega328P (8-bit) & Tensilica L106 (32-bit) & Tensilica Xtensa Dual-Core LX6 (32-bit) \\
+\textbf{Clock Speed} & 16 MHz & 80 / 160 MHz & Up to 240 MHz \\
+\textbf{SRAM Memory} & 2 KB & 80 KB (User) & 520 KB \\
+\textbf{Flash Memory} & 32 KB & 4 MB & 4 MB / 8 MB / 16 MB \\
+\textbf{Wireless Connectivity} & None (Requires shield) & Wi-Fi 802.11 b/g/n & Wi-Fi 802.11 b/g/n + Bluetooth 4.2 / BLE \\
+\textbf{Digital GPIO Pins} & 14 (6 PWM) & 17 (11 Usable) & 36 (24 Usable) \\
+\textbf{Analog Input (ADC)} & 6 channels (10-bit) & 1 channel (10-bit, 0-1V) & 18 channels (12-bit SAR ADC) \\
+\textbf{Operating Voltage} & 5.0 V & 3.3 V & 3.3 V \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Educational Laboratory Sensors and Actuator Modules}
+In physical classroom and laboratory demonstrations, NeuralSpark supports integration with specialized electronic modules:
+
+\subsubsection{Voice Recognition Module V3}
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Processor:} 8-Core Intel Core i7 / AMD Ryzen 7 @ 3.8GHz or AWS EC2 \texttt{t3.xlarge} instance.
-    \item \textbf{Memory:} 16GB--32GB DDR4/DDR5 RAM.
-    \item \textbf{Accelerator (Optional for Local GPU Training):} NVIDIA RTX 3060 / 4070 (12GB VRAM) running CUDA 12.2 and PyTorch 2.4.
+    \item \textbf{Operating Voltage:} 4.5V--5.5V DC.
+    \item \textbf{Communication Interface:} Standard UART serial communication (TTL level, 9600 baud).
+    \item \textbf{Capacity:} Supports up to 80 trained voice commands with 7 active concurrent voice triggers.
+    \item \textbf{Usage in NeuralSpark:} Allows students in laboratory pods to issue hands-free voice commands (e.g., \textit{``Next Question''}, \textit{``Show Hint''}, \textit{``Submit Answer''}) directly to classroom display units.
+\end{itemize}
+
+\subsubsection{PAJ7620U2 Optical Gesture Recognition Sensor}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Interface:} I2C bus (Address \texttt{0x73}).
+    \item \textbf{Detection Modes:} Ingests 9 distinct physical hand gestures: Up, Down, Left, Right, Forward, Backward, Clockwise, Counter-Clockwise, and Wave.
+    \item \textbf{Classroom Application:} Facilitates touchless slide navigation during video lectures and practice feeds.
+\end{itemize}
+
+\subsubsection{Liquid Crystal Displays (LCD 1602 with I2C Backpack)}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Display Capacity:} 16 characters $\times$ 2 lines with LED backlight.
+    \item \textbf{Interface:} PCF8574 I2C expansion adapter (Address \texttt{0x27}), reducing microcontroller pin requirements from 16 pins down to 2 I2C wires (SDA and SCL).
+    \item \textbf{Functionality:} Displays live score counters, remaining quiz time, and system connection status.
+\end{itemize}
+
+\subsubsection{10.1-inch High-Resolution Capacitive Touch HDMI Display}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Resolution:} $1280 \times 800$ IPS Panel with 178-degree viewing angle.
+    \item \textbf{Touch Controller:} Goodix GT911 10-point capacitive touch controller connected via USB.
+    \item \textbf{Integration:} Directly driven by Raspberry Pi micro-HDMI, serving as an interactive classroom kiosk for NeuralSpark.
 \end{itemize}
 
 \section{Cloud Infrastructure and Provider Comparison}
@@ -108,13 +153,39 @@ The user interface is constructed using Next.js 16 and React 19:
 
 \section{Artificial Intelligence \& Machine Learning Subsystems}
 
-\subsection{Deep Learning Foundations in Automated Assessment}
-Neural network architectures process hierarchical representations of textual and visual data. For a sequence of input token embeddings $\mathbf{X} = [\mathbf{x}_1, \dots, \mathbf{x}_n] \in \mathbb{R}^{n \times d}$, a multi-layer Transformer computes contextual representations through repeated applications of multi-head self-attention and position-wise feed-forward networks:
+\subsection{Mathematical Foundations of Deep Learning}
+
+\subsubsection{Multilayer Perceptron (MLP) and Backpropagation Derivations}
+Consider a feed-forward neural network with $L$ layers. Let $\mathbf{a}^{(l-1)}$ denote the activation vector of layer $l-1$, $\mathbf{W}^{(l)}$ denote the weight matrix, and $\mathbf{b}^{(l)}$ denote the bias vector. The forward pass is defined as:
+\begin{equation}
+    \mathbf{z}^{(l)} = \mathbf{W}^{(l)} \mathbf{a}^{(l-1)} + \mathbf{b}^{(l)}, \quad \mathbf{a}^{(l)} = \sigma\left(\mathbf{z}^{(l)}\right)
+\end{equation}
+where $\sigma(\cdot)$ is an activation function (e.g., ReLU or GELU). For a loss function $\mathcal{L}$, the error vector $\boldsymbol{\delta}^{(l)} = \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(l)}}$ is computed recursively via the chain rule:
 \begin{align}
-    \mathbf{Z}^{(l)} &= \text{LayerNorm}\left( \mathbf{X}^{(l-1)} + \text{MultiHeadAttention}(\mathbf{X}^{(l-1)}) \right) \\
-    \mathbf{X}^{(l)} &= \text{LayerNorm}\left( \mathbf{Z}^{(l)} + \text{FFN}(\mathbf{Z}^{(l)}) \right)
+    \boldsymbol{\delta}^{(L)} &= \nabla_{\mathbf{a}^{(L)}} \mathcal{L} \odot \sigma'\left(\mathbf{z}^{(L)}\right) \\
+    \boldsymbol{\delta}^{(l)} &= \left( (\mathbf{W}^{(l+1)})^T \boldsymbol{\delta}^{(l+1)} \right) \odot \sigma'\left(\mathbf{z}^{(l)}\right)
 \end{align}
-where $\text{FFN}(\mathbf{Z}) = \max(0, \mathbf{Z}\mathbf{W}_1 + \mathbf{b}_1)\mathbf{W}_2 + \mathbf{b}_2$.
+The weight and bias gradients are given by:
+\begin{equation}
+    \frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(l)}} = \boldsymbol{\delta}^{(l)} (\mathbf{a}^{(l-1)})^T, \quad \frac{\partial \mathcal{L}}{\partial \mathbf{b}^{(l)}} = \boldsymbol{\delta}^{(l)}
+\end{equation}
+
+\subsubsection{Convolutional Neural Networks (CNN) for Diagram Understanding}
+For an input 2D feature map $\mathbf{I}$ and a kernel $\mathbf{K}$ of dimensions $(2k+1) \times (2k+1)$, the 2D discrete cross-correlation operation is defined as:
+\begin{equation}
+    \mathbf{S}(i, j) = (\mathbf{I} * \mathbf{K})(i, j) = \sum_{m=-k}^k \sum_{n=-k}^k \mathbf{I}(i+m, j+n) \mathbf{K}(m, n)
+\end{equation}
+
+\subsubsection{Recurrent Neural Networks (RNN) and Long Short-Term Memory (LSTM)}
+To process sequential problem descriptions, LSTMs control information flow using three gates:
+\begin{align}
+    \mathbf{f}_t &= \sigma\left( \mathbf{W}_f \mathbf{x}_t + \mathbf{U}_f \mathbf{h}_{t-1} + \mathbf{b}_f \right) \quad \text{(Forget Gate)} \\
+    \mathbf{i}_t &= \sigma\left( \mathbf{W}_i \mathbf{x}_t + \mathbf{U}_i \mathbf{h}_{t-1} + \mathbf{b}_i \right) \quad \text{(Input Gate)} \\
+    \tilde{\mathbf{c}}_t &= \tanh\left( \mathbf{W}_c \mathbf{x}_t + \mathbf{U}_c \mathbf{h}_{t-1} + \mathbf{b}_c \right) \quad \text{(Candidate Cell State)} \\
+    \mathbf{c}_t &= \mathbf{f}_t \odot \mathbf{c}_{t-1} + \mathbf{i}_t \odot \tilde{\mathbf{c}}_t \quad \text{(Updated Cell State)} \\
+    \mathbf{o}_t &= \sigma\left( \mathbf{W}_o \mathbf{x}_t + \mathbf{U}_o \mathbf{h}_{t-1} + \mathbf{b}_o \right) \quad \text{(Output Gate)} \\
+    \mathbf{h}_t &= \mathbf{o}_t \odot \tanh(\mathbf{c}_t) \quad \text{(Hidden State)}
+\end{align}
 
 \subsection{Dual-Engine Automated Assessment Architecture}
 NeuralSpark addresses the trade-off between deep multimodal reasoning and zero-latency private execution through an adaptive dual-engine grading architecture:
@@ -240,6 +311,68 @@ NeuralSpark's persistence layer is engineered around 14 relational database mode
 \bottomrule
 \end{tabularx}
 \end{table}
+
+\section{Core Implementation Code Listings}
+The following listings showcase core implementation modules across backend models, RESTful routing, and frontend React components.
+
+\begin{lstlisting}[language=Python, caption={Django Relational Schema Models in core/models.py}]
+from django.db import models
+from django.contrib.auth.models import AbstractUser
+
+class User(AbstractUser):
+    reputation = models.IntegerField(default=0)
+    bio = models.TextField(blank=True)
+    avatar_url = models.URLField(blank=True)
+
+class Category(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    description = models.TextField(blank=True)
+    icon_slug = models.CharField(max_length=50, blank=True)
+
+    def __str__(self):
+        return self.name
+
+class PYQ(models.Model):
+    subject = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='pyqs')
+    question_text = models.TextField()
+    option_a = models.CharField(max_length=500, blank=True)
+    option_b = models.CharField(max_length=500, blank=True)
+    option_c = models.CharField(max_length=500, blank=True)
+    option_d = models.CharField(max_length=500, blank=True)
+    correct_option = models.CharField(max_length=1, blank=True)
+    answer_text = models.TextField()
+    year = models.IntegerField(null=True, blank=True)
+    is_pyq = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python, caption={Offline Zero-Dependency Batch Launcher in run\_offline.bat}]
+@echo off
+setlocal enabledelayedexpansion
+title NeuralSpark Offline Suite
+echo ========================================================
+echo       NEURALSPARK OFFLINE CLASSROOM RUNTIME
+echo ========================================================
+
+cd /d "%~dp0"
+if not exist "backend\venv\Scripts\python.exe" (
+    echo [*] Creating virtual environment...
+    python -m venv backend\venv
+    call backend\venv\Scripts\pip install -r backend\requirements.txt
+)
+
+echo [*] Applying migrations...
+call backend\venv\Scripts\python.exe backend\manage.py migrate --noinput
+
+echo [*] Launching Django API Server...
+start "NeuralSpark_Backend_API" /min cmd /c "backend\venv\Scripts\python.exe backend\manage.py runserver 127.0.0.1:8000"
+
+echo [*] Launching Next.js Frontend...
+start "NeuralSpark_Frontend" /min cmd /c "cd frontend && npm run dev"
+
+timeout /t 3 >nul
+start http://localhost:3000
+\end{lstlisting}
 
 \section{Content Management System (CMS) \& Administrative Capabilities}
 NeuralSpark integrates an enterprise-grade Content Management System via Django Admin. Instructors and academic administrators can:

@@ -11,7 +11,7 @@ Despite the widespread availability of digital educational content, Massive Open
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\textwidth]{arch_diagram.png}
+    \includegraphics[width=0.92\textwidth]{arch_diagram.png}
     \caption{NeuralSpark High-Level Ecosystem and Multi-Tier Architectural Overview}
     \label{fig:ch1_arch_overview}
 \end{figure}
@@ -77,35 +77,24 @@ Generic educational portals and discussion forums frequently present flat, unorg
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\textwidth]{flow_diagram.png}
+    \includegraphics[width=0.92\textwidth]{flow_diagram.png}
     \caption{NeuralSpark Request and Data Lifecycle Resolving Traditional LMS Bottlenecks}
     \label{fig:ch1_flow_lifecycle}
 \end{figure}
 
-\section{The NeuralSpark Paradigm and Solution Architecture}
+\section{The NeuralSpark Paradigm and Curricular Scope}
 To resolve these systemic challenges, \textbf{NeuralSpark} establishes an integrated, high-performance, and offline-resilient AI-powered educational platform. The platform unifies instructional delivery, active problem-solving practice, collaborative peer learning, and multimodal automated assessment into a single high-performance web and edge infrastructure.
 
-NeuralSpark is architected around five foundational pillars:
+NeuralSpark is architected around the official 8-subject GATE CS/DA curriculum:
 \begin{enumerate}[leftmargin=*]
-    \item \textbf{Standardized 8-Subject Curriculum Core:} The entire platform's content—spanning video lectures, theoretical articles, practice questions, and diagnostic quizzes—is structured under 8 standardized GATE CS/DA subject domains:
-    \begin{itemize}
-        \item Linear Algebra
-        \item Probability \& Statistics
-        \item Calculus \& Optimization
-        \item Python Programming
-        \item Data Structures \& Algorithms
-        \item Machine Learning
-        \item Artificial Intelligence
-        \item General Aptitude
-    \end{itemize}
-    \item \textbf{Dual-Engine Intelligent Automated Grading Pipeline:} NeuralSpark introduces a hybrid grading framework featuring:
-    \begin{itemize}
-        \item \textit{Cloud Multimodal Vision Engine (Mode A):} Ingests scanned PDF and image submissions, extracts mathematical text and diagrammatic structures, and utilizes large vision-language models (Llama 3.2 Vision) via high-throughput Groq APIs to perform deep, criterion-by-criterion rubric scoring.
-        \item \textit{Edge Fine-Tuned Transformer Engine (Mode B):} Employs a locally hosted, fine-tuned Transformer sequence classifier (BERT/RoBERTa) to provide zero-latency, private, and instant semantic scoring for text-based short answer submissions without requiring internet access.
-    \end{itemize}
-    \item \textbf{Interactive Practice \& PYQ Portal:} An index-ordered repository of previous year questions equipped with instant client-side evaluation, step-by-step verified explanations, and LaTeX mathematical typesetting.
-    \item \textbf{Gamified Community Discussion Forum:} A collaborative Q\&A forum where students post queries, upvote high-quality explanations, and earn gamified reputation points.
-    \item \textbf{Offline Classroom Suite:} A self-contained deployment package with local SQLite storage, automated migration synchronizers, superuser bootstrapping, and offline speech-to-text (Vosk) / voice synthesis (Piper) capabilities.
+    \item \textbf{Linear Algebra:} Vector spaces, subspaces, linear dependence, basis, dimension, matrices, determinants, systems of linear equations, eigenvalues, eigenvectors, LU decomposition, and Singular Value Decomposition (SVD).
+    \item \textbf{Calculus \& Optimization:} Functions of a single variable, limits, continuity, differentiability, Mean Value Theorems, indeterminate forms, Taylor series, multivariable calculus, partial derivatives, directional derivatives, gradient, maxima and minima, Lagrange multipliers, and convex optimization fundamentals.
+    \item \textbf{Probability \& Statistics:} Sample spaces, discrete and continuous random variables, probability mass and density functions, cumulative distribution functions, expectation, variance, conditional probability, Bayes Theorem, Bernoulli, Binomial, Poisson, Normal distributions, Central Limit Theorem, hypothesis testing, and confidence intervals.
+    \item \textbf{Python Programming:} Control flow, loops, list comprehensions, functions, object-oriented programming (OOP), memory management, generators, decorators, NumPy vectorized arrays, and Pandas dataframes.
+    \item \textbf{Data Structures \& Algorithms:} Asymptotic notations ($\mathcal{O}, \Omega, \Theta$), recurrence relations, master theorem, arrays, stacks, queues, linked lists, binary trees, AVL trees, binary heaps, hash tables, graph representations, BFS, DFS, Dijkstra's shortest path, Bellman-Ford, Kruskal's/Prim's MST, divide-and-conquer, dynamic programming, and greedy algorithms.
+    \item \textbf{Machine Learning:} Supervised learning, linear regression, ridge/lasso regularization, logistic regression, decision trees, random forests, support vector machines (SVM), k-nearest neighbors (KNN), unsupervised learning, k-means clustering, hierarchical clustering, Principal Component Analysis (PCA), neural network architectures, backpropagation, gradient descent variants, cross-validation, bias-variance tradeoff, and ROC/AUC metrics.
+    \item \textbf{Artificial Intelligence:} Heuristic search, A* search, IDA*, constraint satisfaction problems (CSP), alpha-beta minimax search, propositional logic, first-order predicate logic, inference rules, resolution refutation, probabilistic reasoning, Bayesian belief networks, and Markov Decision Processes.
+    \item \textbf{General Aptitude:} Numerical computation, numerical estimation, numerical reasoning, data interpretation, verbal ability, reading comprehension, syllogisms, and spatial reasoning.
 \end{enumerate}
 
 \section{Aim and Objectives of the Project}
@@ -130,6 +119,6 @@ The remainder of this project report is organized into four subsequent chapters:
 \begin{itemize}[leftmargin=*]
     \item \textbf{Chapter 2 (Literature Survey):} Presents an exhaustive survey of 15 key academic research papers covering automated essay scoring, transformer encoders, multimodal vision models, edge AI, and offline learning systems, concluding with a comparative literature matrix and research gap analysis.
     \item \textbf{Chapter 3 (Project Methodology \& System Architecture):} Details the overall 4-tier microservices architecture, software/hardware dependencies, deep learning and grading algorithms, 14 relational database schemas, CMS administrative portals, and offline launch mechanisms.
-    \item \textbf{Chapter 4 (Implementation, Results \& Analysis):} Discusses the backend routing handlers, REST API specifications, UI/UX components, empirical benchmark results (accuracy, QWK $\kappa$, latency, throughput), qualitative grading case studies, and LMS comparison tables.
+    \item \textbf{Chapter 4 (Implementation, Results \& Analysis):} Discusses the backend routing handlers, REST API specifications, UI/UX components with full web application screenshots, empirical benchmark results (accuracy, QWK $\kappa$, latency, throughput), qualitative grading case studies, and LMS comparison tables.
     \item \textbf{Chapter 5 (Conclusion and Future Scope):} Summarizes the major technological contributions of NeuralSpark and outlines future research directions, including on-device quantized small language models (SLMs), regional vernacular language pipelines, and dynamic knowledge-graph adaptive learning.
 \end{itemize}
