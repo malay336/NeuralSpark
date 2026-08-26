@@ -224,35 +224,56 @@ from typing import Optional
 def _process_uploaded_file(file: UploadedFile, label: str):
     """
     Helper function to process multimodal file uploads for the AI Grader.
-    - If it's a PDF, extracts the raw text via PyPDF2.
-    - If it's an Image, reads the bytes, encodes to base64, and formats
-      it as an image_url object for the Groq Vision model.
+    - If it's a PDF, extracts digital text and all embedded/scanned handwritten page images.
+    - If it's an Image (.png, .jpg, .jpeg, .webp), encodes bytes to Base64 image_url.
+    Returns a list of content dicts for the Multimodal Vision LLM.
     """
     if not file:
-        return None
+        return []
     
-    # If PDF, extract text and return a text message
-    if file.name.endswith('.pdf'):
+    items = []
+    fname = file.name.lower()
+    
+    # 1. Scanned Handwritten or Digital PDF
+    if fname.endswith('.pdf'):
         try:
             reader = PyPDF2.PdfReader(file.file)
             text = ""
-            for page in reader.pages:
-                text += page.extract_text() + "\n"
-            return {"type": "text", "text": f"\n--- {label} (Extracted from PDF) ---\n" + text}
-        except Exception as e:
-            return {"type": "text", "text": f"\n--- {label} (Error reading PDF) ---\n"}
+            for i, page in enumerate(reader.pages):
+                p_text = page.extract_text() or ""
+                if p_text.strip():
+                    text += f"\n--- {label} Page {i+1} Text ---\n" + p_text
+                
+                # Extract scanned handwritten images from the page
+                for img in page.images:
+                    try:
+                        b64 = base64.b64encode(img.data).decode('utf-8')
+                        items.append({
+                            "type": "image_url",
+                            "image_url": {"url": f"data:image/jpeg;base64,{b64}"}
+                        })
+                    except Exception:
+                        pass
             
-    # If image, encode to base64 and return image_url message
-    elif file.name.lower().endswith(('.png', '.jpg', '.jpeg', '.webp')):
+            if text.strip():
+                items.insert(0, {"type": "text", "text": text.strip()})
+            elif not items:
+                items.append({"type": "text", "text": f"\n--- {label} (PDF Uploaded) ---\n"})
+        except Exception as e:
+            items.append({"type": "text", "text": f"\n--- {label} (Error reading PDF: {str(e)}) ---\n"})
+            
+    # 2. Direct Scanned Photo / Image
+    elif fname.endswith(('.png', '.jpg', '.jpeg', '.webp')):
         try:
-            base64_image = base64.b64encode(file.file.read()).decode('utf-8')
-            return {
+            b64_image = base64.b64encode(file.file.read()).decode('utf-8')
+            items.append({
                 "type": "image_url",
-                "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}
-            }
+                "image_url": {"url": f"data:image/jpeg;base64,{b64_image}"}
+            })
         except Exception:
             pass
-    return None
+            
+    return items
 
 @api.post("/products/ai-grader/", response=AIGraderOutSchema)
 def ai_grader_endpoint(
@@ -266,14 +287,14 @@ def ai_grader_endpoint(
 ):
     """
     The main logic for the AI Assignment Grader.
-    Constructs a dynamic multimodal payload from text inputs and uploaded files (PDFs/Images).
-    Sends the compiled payload to Groq's `llama-3.2-11b-vision-preview` LLM model
-    for automated grading and feedback generation.
+    Constructs a dynamic multimodal payload from text inputs, scanned handwritten PDFs, and uploaded images.
+    Sends the compiled payload to Vision-capable LLMs for automated grading and feedback generation.
     """
     client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
     
     system_prompt = """
     You are an expert Computer Science teaching assistant. Your job is to grade student submissions accurately and fairly.
+    You can inspect handwritten mathematical derivations, diagrams, PDF pages, and typed text.
     You must strictly follow the provided rubric.
 
     Output your evaluation EXACTLY in this format:
@@ -291,15 +312,10 @@ def ai_grader_endpoint(
     if student_answer.strip():
         user_content.append({"type": "text", "text": f"Student Answer:\n{student_answer}\n"})
 
-    # Process files
-    q_msg = _process_uploaded_file(question_file, "Question Attached File")
-    if q_msg: user_content.append(q_msg)
-        
-    r_msg = _process_uploaded_file(rubric_file, "Rubric Attached File")
-    if r_msg: user_content.append(r_msg)
-        
-    s_msg = _process_uploaded_file(student_answer_file, "Student Answer Attached File")
-    if s_msg: user_content.append(s_msg)
+    # Process files (PDFs, handwritten scans, photos)
+    user_content.extend(_process_uploaded_file(question_file, "Question Attached File"))
+    user_content.extend(_process_uploaded_file(rubric_file, "Rubric Attached File"))
+    user_content.extend(_process_uploaded_file(student_answer_file, "Student Answer Attached File"))
 
     if not user_content:
         return {"evaluation": "No question, rubric, or answer provided."}
@@ -372,17 +388,10 @@ def ai_grader_endpoint_customized(
         user_content_text += f"Student Answer:\n{student_answer}\n"
 
     # Process files
-    q_msg = _process_uploaded_file(question_file, "Question Attached File")
-    if q_msg and q_msg.get("type") == "text": 
-        user_content_text += q_msg["text"] + "\n"
-        
-    r_msg = _process_uploaded_file(rubric_file, "Rubric Attached File")
-    if r_msg and r_msg.get("type") == "text": 
-        user_content_text += r_msg["text"] + "\n"
-        
-    s_msg = _process_uploaded_file(student_answer_file, "Student Answer Attached File")
-    if s_msg and s_msg.get("type") == "text": 
-        user_content_text += s_msg["text"] + "\n"
+    for f_obj, label in [(question_file, "Question"), (rubric_file, "Rubric"), (student_answer_file, "Student Answer")]:
+        for msg in _process_uploaded_file(f_obj, label):
+            if msg.get("type") == "text":
+                user_content_text += msg["text"] + "\n"
 
     if not user_content_text.strip():
         return {"evaluation": "No valid text provided for grading."}
