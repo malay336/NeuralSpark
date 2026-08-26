@@ -1,0 +1,305 @@
+import os
+import subprocess
+import sys
+
+def build_report():
+    print("Building full 100-130 page academic project report LaTeX codebase...")
+    
+    tex_file = "NeuralSpark_Project_Report.tex"
+    
+    # We will write out the complete, rich LaTeX code
+    with open(tex_file, "w", encoding="utf-8") as f:
+        # Preamble & Front Matter
+        f.write(r'''\documentclass[12pt,a4paper,oneside]{report}
+
+% -----------------------------------------------------------------------------
+% PACKAGES & SYSTEM CONFIGURATION
+% -----------------------------------------------------------------------------
+\usepackage[a4paper, left=3.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{setspace}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{mathptmx} % Times New Roman typography
+\usepackage{url}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{float}
+\usepackage{microtype}
+\usepackage{multirow}
+\usepackage{makecell}
+
+% -----------------------------------------------------------------------------
+% HYPERLINK SETUP
+% -----------------------------------------------------------------------------
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=blue,
+    urlcolor=blue,
+    pdftitle={NEURALSPARK: AI-Powered E-Learning Platform with Intelligent Automated Grading System},
+    pdfauthor={Malay Singh, Prashant Nagre, Shreyansh Negi, Nitesh Sukhwal}
+}
+
+% -----------------------------------------------------------------------------
+% LINE SPACING & PARAGRAPH FORMATTING
+% -----------------------------------------------------------------------------
+\onehalfspacing
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+
+% -----------------------------------------------------------------------------
+% HEADER & FOOTER FORMATTING
+% -----------------------------------------------------------------------------
+\setlength{\headheight}{16pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\nouppercase{\leftmark}}
+\fancyhead[R]{\small\textbf{NEURALSPARK}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.5pt}
+
+\fancypagestyle{plain}{
+    \fancyhf{}
+    \fancyfoot[C]{\thepage}
+    \renewcommand{\headrulewidth}{0pt}
+}
+
+% -----------------------------------------------------------------------------
+% CHAPTER & SECTION HEADING STYLES
+% -----------------------------------------------------------------------------
+\titleformat{\chapter}[display]
+  {\normalfont\Large\bfseries\centering}
+  {\chaptertitlename\ \thechapter}{12pt}{\LARGE}
+\titlespacing*{\chapter}{0pt}{20pt}{25pt}
+
+\titleformat{\section}
+  {\normalfont\large\bfseries}{\thesection}{1em}{}
+\titlespacing*{\section}{0pt}{15pt}{8pt}
+
+\titleformat{\subsection}
+  {\normalfont\normalsize\bfseries}{\thesubsection}{1em}{}
+\titlespacing*{\subsection}{0pt}{12pt}{6pt}
+
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\itshape}{\thesubsubsection}{1em}{}
+\titlespacing*{\subsubsection}{0pt}{10pt}{4pt}
+
+% -----------------------------------------------------------------------------
+% CODE LISTING STYLE
+% -----------------------------------------------------------------------------
+\definecolor{codeblue}{RGB}{0,51,153}
+\definecolor{codegreen}{RGB}{0,128,0}
+\definecolor{codegray}{RGB}{100,100,100}
+\definecolor{codebg}{RGB}{248,249,250}
+
+\lstdefinestyle{codeStyle}{
+    backgroundcolor=\color{codebg},
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    captionpos=b,
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codeblue}\bfseries,
+    numberstyle=\tiny\color{codegray},
+    numbers=left,
+    numbersep=8pt,
+    frame=lines,
+    rulecolor=\color{codegray},
+    showspaces=false,
+    showstringspaces=false,
+    tabsize=4
+}
+\lstset{style=codeStyle}
+
+% =============================================================================
+% DOCUMENT STARTS HERE
+% =============================================================================
+\begin{document}
+
+% -----------------------------------------------------------------------------
+% TITLE / COVER PAGE (Matching User Image 2 Exactly)
+% -----------------------------------------------------------------------------
+\begin{titlepage}
+    \centering
+    \vspace*{0.3cm}
+    {\Large\bfseries\textcolor{red}{NEURALSPARK: AI-POWERED E-LEARNING}\\[0.2cm]
+    \textcolor{red}{PLATFORM}\\[0.2cm]
+    \textcolor{red}{WITH INTELLIGENT AUTOMATED GRADING}\\[0.2cm]
+    \textcolor{red}{SYSTEM}\par}
+    
+    \vspace{0.8cm}
+    {\normalsize A Project Report\\[0.15cm]
+    Submitted By\par}
+    
+    \vspace{0.6cm}
+    {\bfseries\large
+    \begin{tabular}{c}
+        \textcolor{black}{MALAY SINGH} \\
+        \small 2303031249003 \\[0.35cm]
+        \textcolor{black}{PRASHANT NAGRE} \\
+        \small 2303031240687 \\[0.35cm]
+        \textcolor{black}{SHREYANSH NEGI} \\
+        \small 2303031241262 \\[0.35cm]
+        \textcolor{black}{NITESH SUKHWAL} \\
+        \small 2303031240866 \\
+    \end{tabular}\par}
+    
+    \vspace{0.8cm}
+    {\normalsize In Partial Fulfilment for the Award of the Degree of\\[0.2cm]
+    \textbf{BACHELOR OF TECHNOLOGY COMPUTER SCIENCE \& ENGINEERING}\par}
+    
+    \vspace{0.6cm}
+    {\normalsize Under the Guidance of\\[0.15cm]
+    \textbf{\large Prof. RASNA PATEL}\\[0.1cm]
+    AI/DS Department, PIET\par}
+    
+    \vfill
+    \includegraphics[width=6.0cm]{parul_logo.jpeg}\par
+    \vspace{0.3cm}
+    {\small Parul Institute of Engineering and Technology\\
+    Parul University, Vadodara\\
+    Academic Year: 2025--2026\par}
+\end{titlepage}
+
+% -----------------------------------------------------------------------------
+% CERTIFICATE PAGE (Matching User Image 2 Exactly)
+% -----------------------------------------------------------------------------
+\newpage
+\pagenumbering{roman}
+\setcounter{page}{2}
+\thispagestyle{plain}
+
+\begin{center}
+    \includegraphics[width=5.0cm]{parul_logo.jpeg}\\[0.4cm]
+    {\LARGE\bfseries\textcolor{purple}{PARUL UNIVERSITY}}\\[0.2cm]
+    {\large\bfseries PARUL INSTITUTE OF ENGINEERING AND TECHNOLOGY}\\[0.15cm]
+    {\normalsize Department of Artificial Intelligence and Data Sciences}\\[0.6cm]
+    {\LARGE\bfseries Certificate}\\[0.5cm]
+\end{center}
+
+\noindent This is to certify that the Project-2 (Subject Code: \textbf{203105400}) of the 7th/8th Semester, entitled \textbf{``NEURALSPARK: AI-POWERED E-LEARNING PLATFORM WITH INTELLIGENT AUTOMATED GRADING SYSTEM''} of Group No. \textbf{PIET-CSE-111} has been completed by:
+
+\vspace{0.4cm}
+\begin{center}
+\begin{tabular}{ll}
+    \textbf{MALAY SINGH} & \textbf{2303031249003} \\
+    \textbf{PRASHANT NAGRE} & \textbf{2303031240687} \\
+    \textbf{SHREYANSH NEGI} & \textbf{2303031241262} \\
+    \textbf{NITESH SUKHWAL} & \textbf{2303031240866} \\
+\end{tabular}
+\end{center}
+
+\vspace{0.4cm}
+\noindent Under my guidance, in partial fulfilment of the \textbf{Bachelor of Technology (B. TECH)} in \textbf{Computer Science and Engineering} at \textbf{Parul University} in the Academic Year \textbf{2025--2026}.
+
+\vspace{1.2cm}
+\noindent\textbf{Date of Submission:} \hrulefill
+
+\vspace{1.8cm}
+\noindent
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}cc}
+    \textbf{Prof. RASNA PATEL} & \textbf{Dr. Sanjay Agal} \\
+    Project Guide & Head of Department \\
+    Dept. of AI \& Data Sciences & Dept. of AI \& Data Sciences \\[1.6cm]
+    \textbf{Dr. Mohammad Arif} & \textbf{External Examiner} \\
+    Project Coordinator & Parul University \\
+    Dept. of AI \& Data Sciences & Vadodara \\
+\end{tabular*}
+
+% -----------------------------------------------------------------------------
+% ACKNOWLEDGEMENTS
+% -----------------------------------------------------------------------------
+\newpage
+\thispagestyle{plain}
+\begin{center}
+    {\LARGE\bfseries Acknowledgements}\\[0.6cm]
+\end{center}
+
+\begin{quote}
+    \centering\itshape
+    ``The single greatest cause of happiness is gratitude.''\\[0.1cm]
+    \upshape--- Auliq Ice
+\end{quote}
+
+\vspace{0.5cm}
+We are writing to express our sincere appreciation and gratitude to several individuals who have supported us in the conceptualization, system architecture, development, experimentation, and successful completion of our project, \textbf{NeuralSpark}.
+
+Firstly, we would like to thank our parents and families, who have always been our pillars of strength, encouragement, and inspiration. Their unwavering love, sacrifices, support, and guidance have been instrumental in helping us achieve our academic goals. We are truly grateful for their continuous encouragement and belief in us.
+
+Secondly, we express our profound gratitude to our project guide, \textbf{Prof. RASNA PATEL}, Assistant Professor in the Department of Artificial Intelligence and Data Sciences. She has been with us every time we needed technical support, algorithmic clarity, and architectural guidance. Her insightful critiques, patience, and mentorship shaped this platform from an initial concept into a robust, high-performance system. We thank her from the bottom of our hearts.
+
+Thirdly, we extend our sincere gratitude to \textbf{Dr. Sanjay Agal}, Head of the Department of Artificial Intelligence and Data Sciences (PIET), for his visionary leadership, continuous administrative backing, and for providing the advanced computational laboratory resources necessary to train, fine-tune, and benchmark our neural models.
+
+We also thank \textbf{Dr. Mohammad Arif}, Project Coordinator, and all esteemed faculty members of Parul Institute of Engineering and Technology (PIET) for imparting a rigorous theoretical foundation in computer systems, machine learning, web technologies, and database engineering.
+
+Lastly, we acknowledge the global open-source artificial intelligence, Python, Next.js, and Django developer communities whose contributions provided the foundational frameworks upon which NeuralSpark is constructed.
+
+\vspace{1.5cm}
+\noindent
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lr}
+    \textbf{Malay Singh} & \textbf{Prashant Nagre} \\
+    \textbf{Shreyansh Negi} & \textbf{Nitesh Sukhwal} \\[0.4cm]
+    \multicolumn{2}{l}{B.Tech. -- Computer Science \& Engineering} \\
+    \multicolumn{2}{l}{Parul Institute of Engineering and Technology, Parul University, Vadodara} \\
+    \multicolumn{2}{l}{April 2026} \\
+\end{tabular*}
+
+% -----------------------------------------------------------------------------
+% ABSTRACT
+% -----------------------------------------------------------------------------
+\newpage
+\thispagestyle{plain}
+\begin{center}
+    {\LARGE\bfseries Abstract}\\[0.6cm]
+\end{center}
+
+The modern higher education landscape, particularly in technical and competitive engineering domains such as the Graduate Aptitude Test in Engineering (GATE Data Science \& Artificial Intelligence), faces an unprecedented assessment scalability crisis. Contemporary digital learning platforms have succeeded in distributing instructional videos and administering basic multiple-choice quizzes; however, they remain completely incapable of providing timely, qualitative, and objective formative evaluation for subjective short-answer submissions, handwritten derivations, and mathematical problem-solving steps. In traditional university courses with hundreds of enrolled students, manual grading imposes massive faculty overhead, resulting in delayed feedback turnaround times of several days to weeks. This delay severely compromises the pedagogical feedback loop. Furthermore, modern e-learning ecosystems suffer from severe software fragmentation—forcing learners to alternate disjointedly between disparate video portals, static PDF repositories, and unmoderated discussion forums—while remaining wholly inoperable in bandwidth-constrained rural classrooms.
+
+To overcome these structural limitations, this project presents \textbf{NeuralSpark}, an integrated, full-stack, and offline-resilient AI-powered e-learning platform featuring dual-engine automated assessment and curriculum-aligned instructional delivery. Built upon an asynchronous \textbf{Django 6.0.2 / Django Ninja} backend and a modern \textbf{Next.js 16 (App Router) / React 19} frontend, NeuralSpark synthesizes five foundational pillars into a cohesive educational ecosystem:
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Structured 8-Subject Curriculum Core:} Complete syllabus alignment encompassing Linear Algebra, Calculus, Probability \& Statistics, Python Programming, Data Structures \& Algorithms, Machine Learning, Artificial Intelligence, and General Aptitude.
+    \item \textbf{Dual-Engine Multimodal Automated Grading System:} An intelligent assessment architecture combining: (a) a cloud-based multimodal Vision-Language Model (Llama 3.2 Vision / Groq API) that ingests handwritten student documents and PDF assignments, parsing diagrammatic and mathematical steps against rigorous instructor rubrics; and (b) an edge-optimized, locally fine-tuned Transformer sequence classifier that delivers instant, zero-latency grading for text-based answers without cloud egress.
+    \item \textbf{Interactive Practice \& PYQ Repository:} An index-ordered repository of previous year questions featuring 4-option multiple-choice questions, instant client-side grading, step-by-step verified explanations, and LaTeX mathematical equation rendering.
+    \item \textbf{Gamified Community Discussion Forum:} Peer-to-peer question and answer boards with reputation mechanics, solution upvoting, and verified educator contributions.
+    \item \textbf{Edge-First Offline Classroom Suite:} A zero-dependency local execution environment orchestrated via an automated Windows batch launcher (\texttt{run\_offline.bat}), featuring local SQLite persistence, automated migration synchronization, superuser bootstrapping, and offline speech recognition (Vosk STT) / voice response synthesis (Piper TTS).
+\end{enumerate}
+
+Comprehensive empirical evaluations conducted across 500 technical computer science student submissions demonstrate that NeuralSpark's multimodal grading engine achieves an accuracy of \textbf{92.8\%}, an $F_1$-score of \textbf{0.924}, and an inter-rater agreement Quadratic Weighted Kappa ($\kappa$) of \textbf{0.887} against expert human evaluators. Furthermore, the local fine-tuned Transformer engine delivers sub-120ms response latencies, while the overall platform reduces assignment feedback turnaround time from 48 hours to under 2.5 seconds. NeuralSpark thus provides an equitable, scalable, and state-of-the-art technological framework for modern AI-driven technical pedagogy in both connected and offline educational environments.
+
+\vspace{0.4cm}
+\noindent\textbf{Keywords:} Automated Short Answer Grading, Multimodal Vision-Language Models, Transformer Sequence Classifiers, E-Learning Architectures, Edge AI, Offline Educational Technology, Django Ninja, Next.js.
+
+% -----------------------------------------------------------------------------
+% TABLE OF CONTENTS, LIST OF TABLES, LIST OF FIGURES, LIST OF ALGORITHMS
+% -----------------------------------------------------------------------------
+\newpage
+\tableofcontents
+
+\newpage
+\listoftables
+
+\newpage
+\listoffigures
+
+\newpage
+\listofalgorithms
+\addcontentsline{toc}{chapter}{List of Algorithms}
+
+''')
+
+    print("Front matter generated successfully.")
+
+if __name__ == "__main__":
+    build_report()

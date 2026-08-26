@@ -50,3 +50,12 @@ Thumbs.db
 *.fls
 *.fdb_latexmk
 *.synctex.gz
+
+report_images/
+*.log
+*.aux
+*.toc
+*.lot
+*.lof
+*.out
+*.synctex.gz
