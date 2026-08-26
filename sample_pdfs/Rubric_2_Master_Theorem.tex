@@ -1,0 +1,29 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{mathptmx}
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\definecolor{navy}{RGB}{30, 64, 175}
+
+\begin{document}
+\begin{center}
+    {\large\bfseries\textcolor{navy}{EVALUATION RUBRIC: MASTER THEOREM}}\\[0.1cm]
+    {\normalsize\textbf{Total: 5 Marks}}
+\end{center}
+\hrule
+\vspace{0.6cm}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{p{4cm} p{8cm} c}
+\toprule
+\textbf{Criterion} & \textbf{Evaluation Details} & \textbf{Marks} \\
+\midrule
+\textbf{Master Theorem Form} & States $T(n) = aT(n/b) + f(n)$ with $a \ge 1, b > 1$ & \textbf{2.0} \\[0.3cm]
+\textbf{Critical Exponent} & Computes $\log_b a = \log_2 2 = 1 \implies n^{\log_b a} = n$ & \textbf{2.0} \\[0.3cm]
+\textbf{Case 2 Conclusion} & Identifies $f(n) = \Theta(n) = \Theta(n^1) \implies T(n) = \Theta(n \log n)$ & \textbf{1.0} \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{document}

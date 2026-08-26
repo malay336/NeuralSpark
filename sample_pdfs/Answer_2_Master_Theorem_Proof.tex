@@ -1,0 +1,27 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{mathptmx}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+
+\begin{document}
+\begin{center}
+    {\large\bfseries Student Submission: Divide-and-Conquer Analysis}\\[0.1cm]
+    \textbf{Student ID:} 2303031240687
+\end{center}
+\hrule
+\vspace{0.5cm}
+
+\noindent\textbf{Derivation Steps:}\\
+1. The standard Master Theorem representation is $T(n) = aT(n/b) + f(n)$.\\
+2. Comparing with $T(n) = 2T(n/2) + \Theta(n)$, we obtain parameters $a = 2, b = 2, f(n) = \Theta(n)$.\\
+3. We compute the critical exponent:
+\[
+\log_b a = \log_2 2 = 1 \implies n^{\log_b a} = n^1 = n
+\]
+4. Since $f(n) = \Theta(n) = \Theta(n^{\log_b a})$, this recurrence strictly satisfies \textbf{Case 2} of the Master Theorem.\\
+5. Therefore, the asymptotic tight bound is:
+\[
+T(n) = \Theta(n^{\log_b a} \log n) = \Theta(n \log n)
+\]
+\end{document}
