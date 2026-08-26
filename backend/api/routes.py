@@ -277,15 +277,57 @@ def _process_uploaded_file(file: UploadedFile, label: str):
 
 import re
 
+def _latex_to_plain_english(text: str) -> str:
+    """
+    Converts LaTeX formulas and symbols into clean, readable plain English text.
+    """
+    if not text:
+        return ""
+    
+    replacements = [
+        (r'\\lambda_(\d+)', r'lambda_\1'),
+        (r'\\lambda', 'lambda'),
+        (r'\\Theta', 'Theta'),
+        (r'\\Omega', 'Omega'),
+        (r'\\mathcal\{L\}', 'Loss'),
+        (r'\\hat\{y\}', 'y_hat'),
+        (r'\\hat\s*y', 'y_hat'),
+        (r'\\sigma', 'sigma'),
+        (r'\\partial', 'd'),
+        (r'\\cdot', '*'),
+        (r'\\times', '*'),
+        (r'\\in', 'in'),
+        (r'\\le', '<='),
+        (r'\\ge', '>='),
+        (r'\\neq', '!='),
+        (r'\\quad', ' '),
+        (r'\\text\{([^}]+)\}', r'\1'),
+        (r'\\mathbf\{([^}]+)\}', r'\1'),
+        (r'\\mathit\{([^}]+)\}', r'\1'),
+        (r'\\\{', '{'),
+        (r'\\\}', '}'),
+    ]
+    
+    res = text
+    for pat, rep in replacements:
+        res = re.sub(pat, rep, res)
+    
+    # Strip $ or $$ delimiters
+    res = re.sub(r'\$\$?', '', res)
+    # Strip \(\) or \[\] delimiters
+    res = re.sub(r'\\\(|\\\)|\\\[|\\\]', '', res)
+    return res
+
 def _clean_evaluation_output(text: str) -> str:
     """
-    Strips internal <think>...</think> reasoning tags and cleans whitespace
-    so only the final Score and Feedback are returned to the user.
+    Strips internal <think>...</think> reasoning tags and converts LaTeX to plain English
+    so only clean Score and Feedback are returned to the user.
     """
     if not text:
         return ""
     cleaned = re.sub(r'<think>[\s\S]*?</think>', '', text, flags=re.IGNORECASE)
     cleaned = re.sub(r'</?think>', '', cleaned, flags=re.IGNORECASE)
+    cleaned = _latex_to_plain_english(cleaned)
     return cleaned.strip()
 
 @api.post("/products/ai-grader/", response=AIGraderOutSchema)
@@ -310,11 +352,12 @@ def ai_grader_endpoint(
     You can inspect handwritten mathematical derivations, diagrams, PDF pages, and typed text.
     You must strictly follow the provided rubric.
 
-    CRITICAL INSTRUCTION:
-    Do NOT output any <think> tags, chain-of-thought scratchpad, or internal thoughts.
-    Output ONLY the evaluation in this exact format:
+    CRITICAL INSTRUCTIONS:
+    1. Do NOT output any <think> tags, chain-of-thought scratchpad, or internal thoughts.
+    2. Write all feedback in pure PLAIN ENGLISH. Do NOT use LaTeX math syntax (such as \\lambda, \\Theta, \\frac) or dollar signs ($). Use standard keyboard text (e.g. write "lambda^2 - 7*lambda + 10 = 0", "lambda_1 = 5, lambda_2 = 2", "Theta(n log n)").
+    3. Output ONLY the evaluation in this exact format:
     Score: [Points]/[Total Possible Points]
-    Feedback: [1-2 sentences explaining the score, highlighting any missing concepts or correct logic.]
+    Feedback: [1-2 plain English sentences explaining the score, highlighting any missing concepts or correct logic.]
     """
 
     user_content = []

@@ -42,7 +42,24 @@ export default function AIGraderPage() {
             if (studentAnswerFile) formData.append("student_answer_file", studentAnswerFile);
 
             const { data } = await api.post("products/ai-grader/", formData);
-            const cleaned = (data.evaluation || "").replace(/<think>[\s\S]*?<\/think>/gi, "").replace(/<\/?think>/gi, "").trim();
+            const raw = data.evaluation || "";
+            const cleaned = raw
+                .replace(/<think>[\s\S]*?<\/think>/gi, "")
+                .replace(/<\/?think>/gi, "")
+                .replace(/\\lambda_(\d+)/g, "lambda_$1")
+                .replace(/\\lambda/g, "lambda")
+                .replace(/\\Theta/g, "Theta")
+                .replace(/\\Omega/g, "Omega")
+                .replace(/\\hat\s*y|\\hat\{y\}/g, "y_hat")
+                .replace(/\\sigma/g, "sigma")
+                .replace(/\\in/g, "in")
+                .replace(/\\cdot|\\times/g, "*")
+                .replace(/\\text\{([^}]+)\}/g, "$1")
+                .replace(/\\mathbf\{([^}]+)\}/g, "$1")
+                .replace(/\\mathit\{([^}]+)\}/g, "$1")
+                .replace(/\$\$?/g, "")
+                .replace(/\\\(|\\\)|\\\[|\\\]/g, "")
+                .trim();
             setEvaluation(cleaned);
         } catch (error: any) {
             console.error("AI Grader Error:", error);
