@@ -1,8 +1,8 @@
 import os
 import subprocess
 
-def create_plain_english_guide():
-    print("Generating comprehensive, presentation-ready Plain English Companion Guide...")
+def create_comprehensive_plain_english_guide():
+    print("Writing comprehensive Plain English Companion Guide with expansion breakdown...")
     
     tex_content = r'''\documentclass[11pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
@@ -10,7 +10,7 @@ def create_plain_english_guide():
 \usepackage{mathptmx} % Times New Roman
 \usepackage[margin=1in]{geometry}
 \usepackage{setspace}
-\setstretch{1.35}
+\setstretch{1.32}
 \usepackage{xcolor}
 \usepackage{booktabs}
 \usepackage{tabularx}
@@ -36,28 +36,28 @@ def create_plain_english_guide():
 % -----------------------------------------------------------------------------
 \begin{center}
     {\Huge\bfseries\textcolor{primaryblue}{NEURALSPARK}}\\[0.2cm]
-    {\Large\bfseries Project Report Executive Summary \& Plain English Presentation Guide}\\[0.3cm]
-    {\normalsize\textbf{A Simple, Jargon-Free Guide to Understand, Present, and Defend the Entire Project}}\\[0.4cm]
+    {\Large\bfseries Project Report Executive Summary \& Plain English Presentation Guide}\\[0.25cm]
+    {\normalsize\textbf{A Jargon-Free Companion Guide to Understand, Present, and Defend the Thesis}}\\[0.35cm]
     
     \textbf{Project Team Members:}\\
     \textbf{Malay Singh} (2303031249003) \quad \textbf{Prashant Nagre} (2303031240687)\\
-    \textbf{Shreyansh Negi} (2303031241262) \quad \textbf{Nitesh Sukhwal} (2303031240866)\\[0.2cm]
+    \textbf{Shreyansh Negi} (2303031241262) \quad \textbf{Nitesh Sukhwal} (2303031240866)\\[0.15cm]
     
-    \textit{Project Guide:} \textbf{Prof. RASNA PATEL} (AI/DS Department, PIET)\\[0.1cm]
+    \textit{Project Guide:} \textbf{Prof. RASNA PATEL} (AI/DS Department, PIET)\\[0.05cm]
     \small Department of Artificial Intelligence and Data Sciences\\
     Parul Institute of Engineering and Technology, Parul University, Vadodara\\
     Academic Year: 2025--2026
 \end{center}
 
-\vspace{0.2cm}
+\vspace{0.15cm}
 \begin{center}
 \colorbox{boxbg}{\parbox{0.95\textwidth}{\centering\small
-\textbf{Purpose of this Guide:} This document condenses the full 70+ page technical thesis into clear, everyday English. Use this guide to rehearse your project presentations, prepare for viva questions, and explain your technical decisions to professors and external examiners with confidence.}}
+\textbf{Purpose of this Document:} This companion guide condenses our full 71-page academic thesis into clear, everyday English. Use it to rehearse your project presentation, review key technical decisions, explain the evolution from the initial 34-page draft to the 71-page final report, and confidently answer viva defense questions.}}
 \end{center}
 
-\vspace{0.3cm}
+\vspace{0.25cm}
 \hrule
-\vspace{0.4cm}
+\vspace{0.35cm}
 
 % =============================================================================
 % 1. THE 30-SECOND ELEVATOR PITCH
@@ -69,7 +69,71 @@ def create_plain_english_guide():
 \end{quote}
 
 % =============================================================================
-% 2. WHAT PROBLEM ARE WE SOLVING?
+% 2. WHAT WAS CHANGED & EXPANDED (34 PAGES -> 71 PAGES)
+% =============================================================================
+\section{Report Evolution: How the 34-Page Draft Expanded to 71 Pages}
+To meet full academic and university publishing standards, the initial 34-page draft was comprehensively expanded into a rigorous 71-page thesis across six key areas:
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Front Matter \& University Compliance (Pages 1--8):}
+    \begin{itemize}
+        \item Created a strict 1-page Title/Cover layout (Red bold title, all 4 students, guide, and Parul University crest).
+        \item Integrated the official Certificate page with Subject Code \texttt{203105400}, Group \texttt{PIET-CSE-111}, and signatures for Guide, HOD, Project Coordinator, and External Examiner.
+        \item Added Acknowledgements, Abstract, Table of Contents, List of Tables, List of Figures, and List of Algorithms.
+    \end{itemize}
+    \item \textbf{Chapter 1: Introduction (Expanded to 14 Pages):}
+    \begin{itemize}
+        \item Added historical evolution of automated essay scoring (Page's PEG, LSA, e-rater to modern LLMs).
+        \item Documented the 6 root causes of traditional LMS failure (faculty burnout, grading bottleneck, software fragmentation, rural connectivity divide).
+        \item Formulated complete curriculum scope across the 8 GATE CS/DA subjects and 7 technical objectives.
+    \end{itemize}
+    \item \textbf{Chapter 2: Literature Survey (Expanded to 16 Pages):}
+    \begin{itemize}
+        \item Expanded to 15 in-depth individual research paper evaluations with mathematical equations for self-attention, masked language modeling, RoPE, and Quadratic Weighted Kappa ($\kappa$).
+        \item Redesigned the Literature Survey Comparison Matrix (Table 2.1) with full-width columns to prevent syllable squishing.
+    \end{itemize}
+    \item \textbf{Chapter 3: Methodology \& Architecture (Expanded to 22 Pages):}
+    \begin{itemize}
+        \item Added Raspberry Pi 4 Model B specs, standalone Wi-Fi Access Point mode, and microcontroller comparisons (Arduino vs ESP8266 vs ESP32).
+        \item Added educational IoT sensor modules (Voice V3, gesture sensor, I2C LCD, 10.1'' HDMI touch display).
+        \item Added comprehensive Cloud Provider Matrix (AWS vs GCP vs Azure: Lambda, S3, RDS, SageMaker).
+        \item Added deep AI mathematics: MLP backprop derivations, CNN convolutions, LSTM gates, and PPO Reinforcement Learning.
+        \item Added complete field schemas for all 14 Django ORM models and 4 formal LaTeX algorithms.
+    \end{itemize}
+    \item \textbf{Chapter 4: Implementation \& Results (Expanded to 16 Pages):}
+    \begin{itemize}
+        \item Captured and embedded 8 real, high-resolution application screenshots from the active Next.js web app.
+        \item Added a 15-case Quality Assurance Verification Test Suite (Table 4.2).
+        \item Documented benchmark results across 500 student submissions ($\kappa = 0.887$ human-parity agreement).
+        \item Added 3 qualitative case studies with step-by-step mathematical derivation checking.
+    \end{itemize}
+    \item \textbf{Chapter 5 \& Bibliography (Pages 67--71):}
+    \begin{itemize}
+        \item Formulated 4 future research roadmaps (On-device INT4 SLMs, vernacular Indian languages, GNN knowledge graphs).
+        \item Expanded to 35+ complete IEEE-formatted academic citations.
+    \end{itemize}
+\end{enumerate}
+
+\begin{center}
+\small
+\begin{tabularx}{\textwidth}{p{4.2cm} p{3.8cm} X}
+\toprule
+\textbf{Metric / Component} & \textbf{Initial Draft} & \textbf{Final Comprehensive Report} \\
+\midrule
+\textbf{Total Page Count} & 34 Pages & \textbf{71 Pages (High-Density Thesis)} \\
+\textbf{Cover Page Layout} & Overflown to 2 pages & \textbf{Strictly 1 Page (Perfect Fit)} \\
+\textbf{Figures \& Screenshots} & 2 General Diagrams & \textbf{13 High-Resolution Figures \& UI Screens} \\
+\textbf{Database Models} & 4 Summarized & \textbf{All 14 Django ORM Models Detailed} \\
+\textbf{Literature Papers} & 5 Brief Summaries & \textbf{15 Deep Multi-Page Evaluations} \\
+\textbf{LaTeX Algorithms} & 1 Generic & \textbf{4 Formal LaTeX Algorithms with Pseudo-code} \\
+\textbf{QA Test Cases} & None & \textbf{15 Comprehensive Verification Logs} \\
+\textbf{Qualitative Case Studies} & None & \textbf{3 In-depth Step-by-Step Derivation Cases} \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+% =============================================================================
+% 3. WHAT PROBLEM ARE WE SOLVING?
 % =============================================================================
 \section{The Real-World Problem: Why Did We Build This?}
 \begin{enumerate}[leftmargin=*]
@@ -80,7 +144,7 @@ def create_plain_english_guide():
 \end{enumerate}
 
 % =============================================================================
-% 3. THE 5 CORE PILLARS OF NEURALSPARK
+% 4. THE 5 CORE PILLARS OF NEURALSPARK
 % =============================================================================
 \section{The 5 Core Features (What Did We Build?)}
 \begin{enumerate}[leftmargin=*]
@@ -97,7 +161,7 @@ def create_plain_english_guide():
 \end{enumerate}
 
 % =============================================================================
-% 4. HOW THE DUAL-ENGINE AI GRADER WORKS
+% 5. HOW THE DUAL-ENGINE AI GRADER WORKS
 % =============================================================================
 \section{How the Dual-Engine AI Grader Works (Simple Explanation)}
 
@@ -118,7 +182,7 @@ def create_plain_english_guide():
 \end{center}
 
 % =============================================================================
-% 5. THE TECH STACK MADE SIMPLE
+% 6. THE TECH STACK MADE SIMPLE
 % =============================================================================
 \section{The Tech Stack Explained (Why We Chose Each Tool)}
 \begin{itemize}[leftmargin=*]
@@ -142,7 +206,7 @@ def create_plain_english_guide():
 \end{itemize}
 
 % =============================================================================
-% 6. TOP 10 VIVA & PRESENTATION QUESTIONS (AND HOW TO ANSWER)
+% 7. TOP 10 VIVA & PRESENTATION QUESTIONS (AND HOW TO ANSWER)
 % =============================================================================
 \section{Top 10 Viva Defense Questions and Exact Model Answers}
 
@@ -177,7 +241,7 @@ def create_plain_english_guide():
 \textit{Answer:} ``We plan to deploy 4-bit quantized Small Language Models (SLMs like Phi-3 or Llama-3.2-1B) directly on edge devices using TensorRT, add regional Indian languages (Hindi, Gujarati, Tamil), and build Graph Neural Network knowledge maps for adaptive student learning.''
 
 % =============================================================================
-% 7. KEY RESULTS SUMMARY TABLE
+% 8. KEY RESULTS SUMMARY TABLE
 % =============================================================================
 \section{Key Benchmark Results at a Glance}
 
@@ -206,12 +270,12 @@ def create_plain_english_guide():
 '''
     with open("NeuralSpark_Plain_English.tex", "w", encoding="utf-8") as f:
         f.write(tex_content)
-    print("NeuralSpark_Plain_English.tex written successfully.")
+    print("Updated NeuralSpark_Plain_English.tex written successfully.")
 
-    # Compile with pdflatex
+    # Compile with pdflatex (2 passes)
     subprocess.run("pdflatex -interaction=nonstopmode NeuralSpark_Plain_English.tex", shell=True)
     subprocess.run("pdflatex -interaction=nonstopmode NeuralSpark_Plain_English.tex", shell=True)
     print("NeuralSpark_Plain_English.pdf compiled successfully.")
 
 if __name__ == "__main__":
-    create_plain_english_guide()
+    create_comprehensive_plain_english_guide()
