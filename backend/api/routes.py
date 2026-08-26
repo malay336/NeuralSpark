@@ -275,6 +275,19 @@ def _process_uploaded_file(file: UploadedFile, label: str):
             
     return items
 
+import re
+
+def _clean_evaluation_output(text: str) -> str:
+    """
+    Strips internal <think>...</think> reasoning tags and cleans whitespace
+    so only the final Score and Feedback are returned to the user.
+    """
+    if not text:
+        return ""
+    cleaned = re.sub(r'<think>[\s\S]*?</think>', '', text, flags=re.IGNORECASE)
+    cleaned = re.sub(r'</?think>', '', cleaned, flags=re.IGNORECASE)
+    return cleaned.strip()
+
 @api.post("/products/ai-grader/", response=AIGraderOutSchema)
 def ai_grader_endpoint(
     request, 
@@ -297,7 +310,9 @@ def ai_grader_endpoint(
     You can inspect handwritten mathematical derivations, diagrams, PDF pages, and typed text.
     You must strictly follow the provided rubric.
 
-    Output your evaluation EXACTLY in this format:
+    CRITICAL INSTRUCTION:
+    Do NOT output any <think> tags, chain-of-thought scratchpad, or internal thoughts.
+    Output ONLY the evaluation in this exact format:
     Score: [Points]/[Total Possible Points]
     Feedback: [1-2 sentences explaining the score, highlighting any missing concepts or correct logic.]
     """
@@ -334,7 +349,8 @@ def ai_grader_endpoint(
                 model=model_id,
                 temperature=0.1,
             )
-            return {"evaluation": completion.choices[0].message.content}
+            raw_eval = completion.choices[0].message.content
+            return {"evaluation": _clean_evaluation_output(raw_eval)}
         except Exception as e:
             last_error = e
             continue

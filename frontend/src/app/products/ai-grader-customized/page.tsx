@@ -42,7 +42,8 @@ export default function CustomizedAIGraderPage() {
             if (studentAnswerFile) formData.append("student_answer_file", studentAnswerFile);
 
             const { data } = await api.post("products/ai-grader-customized/", formData);
-            setEvaluation(data.evaluation);
+            const cleaned = (data.evaluation || "").replace(/<think>[\s\S]*?<\/think>/gi, "").replace(/<\/?think>/gi, "").trim();
+            setEvaluation(cleaned);
         } catch (error: any) {
             console.error("Custom Grader Error:", error);
             const serverMsg = error.response?.data?.error || error.response?.data?.message || error.message;
